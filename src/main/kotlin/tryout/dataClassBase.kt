@@ -31,75 +31,91 @@ private val foo: Unique = Unique.makeWithSortNbr("foo", 99)
 private val bar: Unique = Unique.makeWithUuid("bar")
 
 
-interface Record {
+interface MediaRecordHeader {
     val unique: Unique
     val uuid: String?
     val timestamp: Instant
     val sourceTopicPartitionOffset: String?
+    val mediaKey: String
 }
 
 
-data class BaseRecord(
-    override val unique: Unique,
-    override val uuid: String?,
-    override val timestamp: Instant,
-    override val sourceTopicPartitionOffset: String?
-) : Record {
+interface MediaRecord {
+    val header: MediaRecordHeader
+}
+
+
+data class CredentialCardHeader(
+        override val unique: Unique,
+        override val uuid: String?,
+        override val timestamp: Instant,
+        override val sourceTopicPartitionOffset: String?,
+        val mediaId: String,
+        val mediaProviderId: Int,
+        val mediaType: Int
+) : MediaRecordHeader {
+    override val mediaKey: String
+        get() = mediaId + mediaProviderId + mediaType
+
     companion object
 }
 
-fun BaseRecord.Companion.makeWithSortNbr(
+fun CredentialCardHeader.Companion.makeWithSortNbr(
         discriminator: String,
         sortNbr: Int,
         uuid: String?,
-        sourceTopicPartitionOffset: String?
-): BaseRecord {
+        sourceTopicPartitionOffset: String?,
+        mediaId: String,
+        mediaProviderId: Int,
+        mediaType: Int
+): CredentialCardHeader {
     val unique = Unique.makeWithSortNbr(discriminator, sortNbr)
     val timestamp = Instant.now()
-    return BaseRecord(unique, uuid, timestamp, sourceTopicPartitionOffset)
+    return CredentialCardHeader(unique, uuid, timestamp, sourceTopicPartitionOffset, mediaId, mediaProviderId, mediaType)
 }
 
-fun BaseRecord.Companion.makeWithUuid(
+fun CredentialCardHeader.Companion.makeWithUuid(
         discriminator: String,
-        sourceTopicPartitionOffset: String?
-): BaseRecord {
+        sourceTopicPartitionOffset: String?,
+        mediaId: String,
+        mediaProviderId: Int,
+        mediaType: Int
+): CredentialCardHeader {
     val unique = Unique.makeWithUuid(discriminator)
     val timestamp = Instant.now()
-    return BaseRecord(unique, unique.uuid, timestamp, sourceTopicPartitionOffset)
+    return CredentialCardHeader(unique, unique.uuid, timestamp, sourceTopicPartitionOffset, mediaId, mediaProviderId, mediaType)
 }
 
-
-data class SampleRecord1(
-        val base: BaseRecord,
-        val foo: Int,
-        val bar: String
-)
-
-
-data class SampleRecord2(
-        val base: BaseRecord,
-        val foo: Int,
-        val bar: String
-) : Record by base {
+data class Usage(
+        override val header: CredentialCardHeader,
+        val foo: String,
+        val bar: Int
+) : MediaRecord {
     companion object
 }
 
-fun SampleRecord2.Companion.makeWithSortNbr(
+fun Usage.Companion.makeWithSortNbr(
         sortNbr: Int,
         uuid: String?,
         sourceTopicPartitionOffset: String?,
-        foo: Int,
-        bar: String
-): SampleRecord2 {
-    val base = BaseRecord.makeWithSortNbr("SampleRecord2", sortNbr, uuid, sourceTopicPartitionOffset)
-    return SampleRecord2(base, foo, bar)
+        mediaId: String,
+        mediaProviderId: Int,
+        mediaType: Int,
+        foo: String,
+        bar: Int
+): Usage {
+    val header = CredentialCardHeader.makeWithSortNbr("Usage", sortNbr, uuid, sourceTopicPartitionOffset, mediaId, mediaProviderId, mediaType)
+    return Usage(header, foo, bar)
 }
 
-fun SampleRecord2.Companion.makeWithUuid(
+fun Usage.Companion.makeWithUuid(
         sourceTopicPartitionOffset: String?,
-        foo: Int,
-        bar: String
-): SampleRecord2 {
-    val base = BaseRecord.makeWithUuid("SampleRecord2", sourceTopicPartitionOffset)
-    return SampleRecord2(base, foo, bar)
+        mediaId: String,
+        mediaProviderId: Int,
+        mediaType: Int,
+        foo: String,
+        bar: Int
+): Usage {
+    val base = CredentialCardHeader.makeWithUuid("Usage", sourceTopicPartitionOffset, mediaId, mediaProviderId, mediaType)
+    return Usage(base, foo, bar)
 }
