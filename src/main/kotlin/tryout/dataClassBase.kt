@@ -69,7 +69,6 @@ fun BaseRecord.Companion.makeWithUuid(
 }
 
 
-
 data class SampleRecord1(
         val base: BaseRecord,
         val foo: Int,
@@ -97,13 +96,10 @@ fun SampleRecord2.Companion.makeWithSortNbr(
 }
 
 fun SampleRecord2.Companion.makeWithUuid(
-        uuid: String,
-        timestamp: Instant,
         sourceTopicPartitionOffset: String?,
         foo: Int,
         bar: String
 ): SampleRecord2 {
-    val unique = Unique.makeWithUuid("SampleRecord2")
-    val base = BaseRecord(unique, uuid, timestamp, sourceTopicPartitionOffset)
+    val base = BaseRecord.makeWithUuid("SampleRecord2", sourceTopicPartitionOffset)
     return SampleRecord2(base, foo, bar)
 }
