@@ -13,7 +13,7 @@ import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.flow.*
 
 
-object `Sequential flows 1` {
+object `KotlinxFlow Sequential flows 1` {
 
     val ints: Flow<Int> = flow {
         for (i in 1..10) {
@@ -32,7 +32,7 @@ object `Sequential flows 1` {
 }
 
 
-object `Sequential flows 2` {
+object `KotlinxFlow Sequential flows 2` {
 
     val ints: Flow<Int> = flow {
         for (i in 1..10) {
@@ -55,7 +55,7 @@ object `Sequential flows 2` {
 }
 
 
-object `Concurrent coroutines` {
+object `KotlinxFlow Concurrent coroutines` {
 
     val ints: Flow<Int> = flow {
         for (i in 1..10) {
@@ -86,7 +86,7 @@ object `Concurrent coroutines` {
 
 
 fun main() = runBlocking {
-    `Sequential flows 1`.main()
-    `Sequential flows 2`.main()
-    `Concurrent coroutines`.main()
+    `KotlinxFlow Sequential flows 1`.main()
+    `KotlinxFlow Sequential flows 2`.main()
+    `KotlinxFlow Concurrent coroutines`.main()
 }
