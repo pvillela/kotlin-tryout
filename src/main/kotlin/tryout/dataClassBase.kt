@@ -1,6 +1,7 @@
 package tryout
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonIgnoreType
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -29,7 +30,7 @@ fun Unique.Companion.makeWithSortNbr(discriminator: String, sortNbr: Int) =
         Unique(discriminator, null, null, "sortNbr", sortNbr)
 
 fun Unique.Companion.makeWithUuid(discriminator: String) =
-        Unique(discriminator, "uuid", UUID.randomUUID().toString(), null, null)
+        Unique(discriminator, "UUID", UUID.randomUUID().toString(), null, null)
 
 private val foo: Unique = Unique.makeWithSortNbr("foo", 99)
 
@@ -201,6 +202,46 @@ fun UsageInh.Companion.makeWithUuid(
     return UsageInh(base, foo, bar)
 }
 
+/////////////////////
+// Inheritance with abstract class
+
+abstract class AbstractCredentialCard(header: CredentialCardHeader) : CredentialCardInh by header
+
+data class UsageInhAbs(
+        val header: CredentialCardHeader,
+        val foo: String,
+        val bar: Int
+) : CredentialCardInh by header {
+
+    companion object
+}
+
+fun UsageInhAbs.Companion.makeWithSortNbr(
+        sortNbr: Int,
+        uuid: String?,
+        sourceTopicPartitionOffset: String?,
+        mediaId: String,
+        mediaProviderId: Int,
+        mediaType: Int,
+        foo: String,
+        bar: Int
+): UsageInhAbs {
+    val header = CredentialCardHeader.makeWithSortNbr("Usage", sortNbr, uuid, sourceTopicPartitionOffset, mediaId, mediaProviderId, mediaType)
+    return UsageInhAbs(header, foo, bar)
+}
+
+fun UsageInhAbs.Companion.makeWithUuid(
+        sourceTopicPartitionOffset: String?,
+        mediaId: String,
+        mediaProviderId: Int,
+        mediaType: Int,
+        foo: String,
+        bar: Int
+): UsageInhAbs {
+    val base = CredentialCardHeader.makeWithUuid("Usage", sourceTopicPartitionOffset, mediaId, mediaProviderId, mediaType)
+    return UsageInhAbs(base, foo, bar)
+}
+
 
 /////////////////////
 // Inheritance without data class
@@ -262,6 +303,13 @@ fun main() {
     println(usageInhSer)
     val usageInhDes = objectMapper.readValue<UsageInh>(usageInhSer)
     println(usageInhDes)
+
+    println("\n***** UsageInhAbs")
+    val usageInhAbs = UsageInhAbs.makeWithUuid("stpo", "123", 42, 99, "foo", 1)
+    val usageInhAbsSer = objectMapper.writeValueAsString(usageInhAbs)
+    println(usageInhAbsSer)
+    val usageInhAbsDes = objectMapper.readValue<UsageInhAbs>(usageInhAbsSer)
+    println(usageInhAbsDes)
 
     println("\n***** UsageInhWdc")
     val usageInhWdc = UsageInhWdc.makeWithUuid("stpo", "123", 42, 99, "foo", 1)
