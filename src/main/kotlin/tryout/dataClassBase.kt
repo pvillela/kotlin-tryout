@@ -31,7 +31,7 @@ private val foo: Unique = Unique.makeWithSortNbr("foo", 99)
 private val bar: Unique = Unique.makeWithUuid("bar")
 
 
-interface MediaRecordHeader {
+interface MediaHeaderI {
     val unique: Unique
     val uuid: String?
     val timestamp: Instant
@@ -40,8 +40,12 @@ interface MediaRecordHeader {
 }
 
 
-interface MediaRecord {
-    val header: MediaRecordHeader
+interface CredentialCardHeaderI : MediaHeaderI {
+    val mediaId: String
+    val mediaProviderId: Int
+    val mediaType: Int
+    override val mediaKey: String
+        get() = mediaId + mediaProviderId + mediaType
 }
 
 
@@ -50,12 +54,10 @@ data class CredentialCardHeader(
         override val uuid: String?,
         override val timestamp: Instant,
         override val sourceTopicPartitionOffset: String?,
-        val mediaId: String,
-        val mediaProviderId: Int,
-        val mediaType: Int
-) : MediaRecordHeader {
-    override val mediaKey: String
-        get() = mediaId + mediaProviderId + mediaType
+        override val mediaId: String,
+        override val mediaProviderId: Int,
+        override val mediaType: Int
+) : CredentialCardHeaderI {
 
     companion object
 }
@@ -86,15 +88,27 @@ fun CredentialCardHeader.Companion.makeWithUuid(
     return CredentialCardHeader(unique, unique.uuid, timestamp, sourceTopicPartitionOffset, mediaId, mediaProviderId, mediaType)
 }
 
-data class Usage(
+
+/////////////////////
+// Embedding example
+
+interface MediaEmb {
+    val header: MediaHeaderI
+}
+
+interface CredentialCardEmb : MediaEmb {
+    override val header: CredentialCardHeaderI
+}
+
+data class UsageEmb(
         override val header: CredentialCardHeader,
         val foo: String,
         val bar: Int
-) : MediaRecord {
+) : CredentialCardEmb {
     companion object
 }
 
-fun Usage.Companion.makeWithSortNbr(
+fun UsageEmb.Companion.makeWithSortNbr(
         sortNbr: Int,
         uuid: String?,
         sourceTopicPartitionOffset: String?,
@@ -103,19 +117,80 @@ fun Usage.Companion.makeWithSortNbr(
         mediaType: Int,
         foo: String,
         bar: Int
-): Usage {
+): UsageEmb {
     val header = CredentialCardHeader.makeWithSortNbr("Usage", sortNbr, uuid, sourceTopicPartitionOffset, mediaId, mediaProviderId, mediaType)
-    return Usage(header, foo, bar)
+    return UsageEmb(header, foo, bar)
 }
 
-fun Usage.Companion.makeWithUuid(
+fun UsageEmb.Companion.makeWithUuid(
         sourceTopicPartitionOffset: String?,
         mediaId: String,
         mediaProviderId: Int,
         mediaType: Int,
         foo: String,
         bar: Int
-): Usage {
+): UsageEmb {
+    val header = CredentialCardHeader.makeWithUuid("Usage", sourceTopicPartitionOffset, mediaId, mediaProviderId, mediaType)
+    return UsageEmb(header, foo, bar)
+}
+
+
+/////////////////////
+// Inheritance example
+
+typealias MediaInh = MediaHeaderI
+
+typealias CredentialCardInh = CredentialCardHeaderI
+
+data class UsageInh(
+        override val unique: Unique,
+        override val uuid: String?,
+        override val timestamp: Instant,
+        override val sourceTopicPartitionOffset: String?,
+        override val mediaId: String,
+        override val mediaProviderId: Int,
+        override val mediaType: Int,
+        val foo: String,
+        val bar: Int
+) : CredentialCardInh {
+
+    constructor(header: CredentialCardHeader, foo:String, bar: Int) : this(
+            header.unique,
+            header.uuid,
+            header.timestamp,
+            header.sourceTopicPartitionOffset,
+            header.mediaId,
+            header.mediaProviderId,
+            header.mediaType,
+            foo,
+            bar
+    )
+
+    companion object
+}
+
+fun UsageInh.Companion.makeWithSortNbr(
+        sortNbr: Int,
+        uuid: String?,
+        sourceTopicPartitionOffset: String?,
+        mediaId: String,
+        mediaProviderId: Int,
+        mediaType: Int,
+        foo: String,
+        bar: Int
+): UsageInh {
+    val header = CredentialCardHeader.makeWithSortNbr("Usage", sortNbr, uuid, sourceTopicPartitionOffset, mediaId, mediaProviderId, mediaType)
+    return UsageInh(header, foo, bar)
+}
+
+fun UsageInh.Companion.makeWithUuid(
+        sourceTopicPartitionOffset: String?,
+        mediaId: String,
+        mediaProviderId: Int,
+        mediaType: Int,
+        foo: String,
+        bar: Int
+): UsageInh {
     val base = CredentialCardHeader.makeWithUuid("Usage", sourceTopicPartitionOffset, mediaId, mediaProviderId, mediaType)
-    return Usage(base, foo, bar)
+    return UsageInh(base, foo, bar)
 }
