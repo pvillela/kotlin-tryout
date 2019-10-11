@@ -1,5 +1,10 @@
 package tryout
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.readValue
 import java.time.Instant
 import java.util.*
 
@@ -31,6 +36,7 @@ private val foo: Unique = Unique.makeWithSortNbr("foo", 99)
 private val bar: Unique = Unique.makeWithUuid("bar")
 
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 interface MediaHeaderI {
     val unique: Unique
     val uuid: String?
@@ -136,7 +142,7 @@ fun UsageEmb.Companion.makeWithUuid(
 
 
 /////////////////////
-// Inheritance example
+// Inheritance with data class
 
 typealias MediaInh = MediaHeaderI
 
@@ -193,4 +199,74 @@ fun UsageInh.Companion.makeWithUuid(
 ): UsageInh {
     val base = CredentialCardHeader.makeWithUuid("Usage", sourceTopicPartitionOffset, mediaId, mediaProviderId, mediaType)
     return UsageInh(base, foo, bar)
+}
+
+
+/////////////////////
+// Inheritance without data class
+
+class UsageInhWdc(
+        header: CredentialCardHeader,
+        val foo: String,
+        val bar: Int
+) : CredentialCardInh by header {
+
+    companion object
+}
+
+fun UsageInhWdc.Companion.makeWithSortNbr(
+        sortNbr: Int,
+        uuid: String?,
+        sourceTopicPartitionOffset: String?,
+        mediaId: String,
+        mediaProviderId: Int,
+        mediaType: Int,
+        foo: String,
+        bar: Int
+): UsageInhWdc {
+    val header = CredentialCardHeader.makeWithSortNbr("Usage", sortNbr, uuid, sourceTopicPartitionOffset, mediaId, mediaProviderId, mediaType)
+    return UsageInhWdc(header, foo, bar)
+}
+
+fun UsageInhWdc.Companion.makeWithUuid(
+        sourceTopicPartitionOffset: String?,
+        mediaId: String,
+        mediaProviderId: Int,
+        mediaType: Int,
+        foo: String,
+        bar: Int
+): UsageInhWdc {
+    val base = CredentialCardHeader.makeWithUuid("Usage", sourceTopicPartitionOffset, mediaId, mediaProviderId, mediaType)
+    return UsageInhWdc(base, foo, bar)
+}
+
+
+/////////////////////
+// main
+
+fun main() {
+    val objectMapper = ObjectMapper()
+            .registerModule(KotlinModule())
+            .registerModule(JavaTimeModule())
+
+    println("\n***** UsageEmb")
+    val usageEmb = UsageEmb.makeWithUuid("stpo", "123", 42, 99, "foo", 1)
+    val usageEmbSer = objectMapper.writeValueAsString(usageEmb)
+    println(usageEmbSer)
+    val usageEmbDes = objectMapper.readValue<UsageEmb>(usageEmbSer)
+    println(usageEmbDes)
+
+    println("\n***** UsageInh")
+    val usageInh = UsageInh.makeWithUuid("stpo", "123", 42, 99, "foo", 1)
+    val usageInhSer = objectMapper.writeValueAsString(usageInh)
+    println(usageInhSer)
+    val usageInhDes = objectMapper.readValue<UsageInh>(usageInhSer)
+    println(usageInhDes)
+
+    println("\n***** UsageInhWdc")
+    val usageInhWdc = UsageInhWdc.makeWithUuid("stpo", "123", 42, 99, "foo", 1)
+    val usageInhWdcSer = objectMapper.writeValueAsString(usageInhWdc)
+    println(usageInhWdcSer)
+    val usageInhWdcDes = objectMapper.readValue<UsageInhWdc>(usageInhWdcSer)
+    println(usageInhWdcDes)
 }
