@@ -16,9 +16,9 @@ import com.fasterxml.jackson.module.kotlin.readValue
 //        include = JsonTypeInfo.As.PROPERTY,
         property = "discriminator"
 )
-@JsonSubTypes(
-        JsonSubTypes.Type(value = Car::class, name = "Car"),
-        JsonSubTypes.Type(value = Truck::class, name = "Truck")
+@JsonSubTypes(  // avoid hardcoding discriminators here by using companion property
+        JsonSubTypes.Type(value = Car::class, name = Car.discriminator),
+        JsonSubTypes.Type(value = Truck::class, name = Truck.discriminator)
 )
 interface Vehicle {
     val make: String
@@ -33,7 +33,11 @@ data class Car(
         val topSpeed: Double
 ) : Vehicle {
     override val discriminator: String
-        get() = "Car"
+        get() = Companion.discriminator
+
+    companion object {
+        const val discriminator: String = "Car"
+    }
 }
 
 data class Truck(
@@ -42,7 +46,11 @@ data class Truck(
         val payloadCapacity: Double
 ) : Vehicle {
     override val discriminator: String
-        get() = "Truck"
+        get() = Companion.discriminator
+
+    companion object {
+        const val discriminator: String = "Truck"
+    }
 }
 
 
