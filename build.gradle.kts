@@ -53,6 +53,7 @@ dependencyManagement {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-test")
 
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:${properties["coroutines_core_version"]}")
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${properties["coroutines_jdk8"]}")
