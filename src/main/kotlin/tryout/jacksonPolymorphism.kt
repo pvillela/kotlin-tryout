@@ -1,5 +1,6 @@
 package tryout
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -20,18 +21,25 @@ import com.fasterxml.jackson.module.kotlin.readValue
         JsonSubTypes.Type(value = Car::class, name = Car.discriminator),
         JsonSubTypes.Type(value = Truck::class, name = Truck.discriminator)
 )
-interface Vehicle {
-    val make: String
-    val model: String
-    val discriminator: String
+abstract class Vehicle {
+    @JsonIgnore
+    open var foo: String = "blablabla"
+    abstract val make: String
+    abstract val model: String
+    abstract val discriminator: String
 }
+//interface Vehicle {
+//    val make: String
+//    val model: String
+//    val discriminator: String
+//}
 
 data class Car(
         override val make: String,
         override val model: String,
         val seatingCapacity: Int,
         val topSpeed: Double
-) : Vehicle {
+) : Vehicle() {
     override val discriminator: String
         get() = Companion.discriminator
 
@@ -43,8 +51,9 @@ data class Car(
 data class Truck(
         override val make: String,
         override val model: String,
-        val payloadCapacity: Double
-) : Vehicle {
+        val payloadCapacity: Double,
+        override var foo: String = "TruckString"
+) : Vehicle() {
     override val discriminator: String
         get() = Companion.discriminator
 
