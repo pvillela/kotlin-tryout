@@ -30,9 +30,11 @@ interface Vehicle {
     val make: String
     val model: String
     val discriminator: String
+    val bar: String
+        get() = "bar"
 }
 
-@JsonIgnoreProperties("foo")
+@JsonIgnoreProperties("foo", ignoreUnknown = true)
 data class Car(
         override val make: String,
         override val model: String,
@@ -47,6 +49,7 @@ data class Car(
     }
 }
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class Truck(
         override val make: String,
         override val model: String,
