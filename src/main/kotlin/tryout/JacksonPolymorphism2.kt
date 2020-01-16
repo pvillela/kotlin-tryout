@@ -37,6 +37,11 @@ object JacksonPolymorphism2 {
 
         @JsonIgnore
         fun getBaz(): String
+
+        // If @JsonIgnore is not present, Jackson does not get a stack overflow for the property
+        // below when serializing a single object, but it serializes it to one level only.
+        @JsonIgnore
+        fun <T : JacksonPolymorphism1.Vehicle> getXxx(): T
     }
 
     @JsonIgnoreProperties("foo", ignoreUnknown = true)
@@ -47,9 +52,11 @@ object JacksonPolymorphism2 {
             val topSpeed: Double
     ) : Vehicle {
         override fun getBaz(): String = "Car.baz"
+
+        override fun <T : JacksonPolymorphism1.Vehicle> getXxx(): T = JacksonPolymorphism1.Car("VW", "Beetle", 4, 90.0) as T
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonIgnoreProperties("bar")
     data class Truck(
             override val make: String,
             override val model: String,
@@ -57,6 +64,8 @@ object JacksonPolymorphism2 {
             override var foo: String = "<<<TruckString>>>"
     ) : Vehicle {
         override fun getBaz(): String = "Truck.baz"
+
+        override fun <T : JacksonPolymorphism1.Vehicle> getXxx(): T = JacksonPolymorphism1.Truck("Mercedes", "M1", 100.0) as T
     }
 
     @JvmStatic
@@ -84,5 +93,12 @@ object JacksonPolymorphism2 {
         val carDes = objectMapper.readValue<Vehicle>(carSer)
         println(carDes)
         println(car == carDes)
+
+        val truck: Vehicle = Truck("Scania", "X25", 50_000.0)
+        val truckSer = objectMapper.writeValueAsString(truck)
+        println(truckSer)
+        val truckDes = objectMapper.readValue<Vehicle>(truckSer)
+        println(truckDes)
+        println(truck == truckDes)
     }
 }

@@ -36,6 +36,11 @@ object JacksonPolymorphism1 {
 
         @JsonIgnore
         fun getBaz(): String
+
+        // Jackson gets stack overflow when serializing the list of vehicles in main without the
+        // annotation below
+        @JsonIgnore
+        fun <T : Vehicle> getXxx(): T
     }
 
     @JsonIgnoreProperties("foo", ignoreUnknown = true)
@@ -49,6 +54,8 @@ object JacksonPolymorphism1 {
             get() = Companion.discriminator
 
         override fun getBaz(): String = "Car.baz"
+
+        override fun <T : Vehicle> getXxx(): T = Car("VW", "Beetle", 4, 90.0) as T
 
         companion object {
             const val discriminator: String = "Car"
@@ -66,6 +73,8 @@ object JacksonPolymorphism1 {
             get() = Companion.discriminator
 
         override fun getBaz(): String = "Truck.baz"
+
+        override fun <T : Vehicle> getXxx(): T = Truck("Mercedes", "M1", 100.0) as T
 
         companion object {
             const val discriminator: String = "Truck"
