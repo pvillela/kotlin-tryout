@@ -3,31 +3,50 @@ package tryout.polymorphicdata
 import java.lang.IllegalArgumentException
 
 
-object NarrowingFunctions0 {
+object NarrowingFunctions2 {
 
-    interface Foo {
+    interface FooI {
         val mediaType: String
         val commonA: Int
         var commonB: String
-
-        fun toData(): FooData
     }
 
 
-    interface Foo1 : Foo {
+    data class Foo(
+            override val mediaType: String,
+            override val commonA: Int,
+            override var commonB: String,
+            var notCommon1: Int? = null,
+            val notCommon2: String? = null,
+            var pseudoCommon: Int? = null
+    ) : FooI
+
+    // This extension function may not be required in most use cases
+    @Suppress("UNCHECKED_CAST")
+    fun <T : FooI> Foo.toType(cls: Class<T>): T = when (cls) {
+        Foo1::class.java -> Foo1(this) as T
+        Foo2::class.java -> Foo2(this) as T
+        else -> throw IllegalArgumentException("Unsupported type $cls")
+    }
+
+
+    abstract class FooNarrowed(val data: Foo) : FooI by data {
+        protected fun <T : Any> safeGet(prop: T?): T {
+            check(prop != null) { "Property must not be null for mediaType ${data.mediaType}" }
+            return prop
+        }
+    }
+
+
+    class Foo1(data: Foo) : FooNarrowed(data) {
         var notCommon1: Int
-        var pseudoCommon: Int
-
-        companion object
-    }
-
-    class Foo1Impl(private val data: FooData) : FooU(data), Foo1 {
-        override var notCommon1: Int
             get() = safeGet(data.notCommon1)
             set(x) = run { data.notCommon1 = x }
-        override var pseudoCommon: Int
+        var pseudoCommon: Int
             get() = safeGet(data.pseudoCommon)
             set(x) = run { data.pseudoCommon = x }
+
+        companion object
     }
 
     operator fun Foo1.Companion.invoke(
@@ -35,14 +54,12 @@ object NarrowingFunctions0 {
             commonB: String,
             notCommon1: Int
     ): Foo1 =
-            Foo1Impl(FooData(
+            Foo1(Foo(
                     mediaType = Foo1::class.java.simpleName,
                     commonA = commonA,
                     commonB = commonB,
                     notCommon1 = notCommon1
             ))
-
-    operator fun Foo1.Companion.invoke(data: FooData): Foo1 = Foo1Impl(data)
 
     fun Foo1.copy(
             commonA: Int = this.commonA,
@@ -55,19 +72,15 @@ object NarrowingFunctions0 {
                     notCommon1
             )
 
-    interface Foo2 : Foo {
+
+    class Foo2(data: Foo) : FooNarrowed(data) {
         val notCommon2: String
-        var pseudoCommon: Int?
-
-        companion object
-    }
-
-    class Foo2Impl(private val data: FooData) : FooU(data), Foo2 {
-        override val notCommon2: String
             get() = safeGet(data.notCommon2)
-        override var pseudoCommon: Int?
+        var pseudoCommon: Int?
             get() = data.pseudoCommon
             set(x) = run { data.pseudoCommon = x }
+
+        companion object
     }
 
     operator fun Foo2.Companion.invoke(
@@ -75,14 +88,12 @@ object NarrowingFunctions0 {
             commonB: String,
             notCommon2: String
     ): Foo2 =
-            Foo2Impl(FooData(
+            Foo2(Foo(
                     mediaType = Foo2::class.java.simpleName,
                     commonA = commonA,
                     commonB = commonB,
                     notCommon2 = notCommon2
             ))
-
-    operator fun Foo2.Companion.invoke(data: FooData): Foo2 = Foo2Impl(data)
 
     fun Foo2.copy(
             commonA: Int = this.commonA,
@@ -94,32 +105,4 @@ object NarrowingFunctions0 {
                     commonB = commonB,
                     notCommon2 = notCommon2
             )
-
-
-    abstract class FooU(private val data: FooData) : Foo by data {
-        override fun toData() = data
-        protected fun <T : Any> safeGet(prop: T?): T {
-            check(prop != null) { "Property not defined for subtype ${data.mediaType}" }
-            return prop
-        }
-    }
-
-
-    data class FooData(
-            override val mediaType: String,
-            override val commonA: Int,
-            override var commonB: String,
-            var notCommon1: Int? = null,
-            val notCommon2: String? = null,
-            var pseudoCommon: Int? = null
-    ) : Foo {
-        override fun toData() = this
-
-        @Suppress("UNCHECKED_CAST")
-        fun <T : Foo> toType(cls: Class<T>): T = when (cls) {
-            Foo1::class.java -> Foo1(this) as T
-            Foo2::class.java -> Foo2(this) as T
-            else -> throw IllegalArgumentException("Unsupported type $cls")
-        }
-    }
 }
