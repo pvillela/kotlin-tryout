@@ -31,7 +31,7 @@ object NarrowingFunctions2 {
 
 
     abstract class FooNarrowed(val data: Foo) : FooI by data {
-        protected fun <T : Any> safeGet(prop: T?): T {
+        protected fun <T : Any> notNull(prop: T?): T {
             check(prop != null) { "Property must not be null for mediaType ${data.mediaType}" }
             return prop
         }
@@ -40,10 +40,10 @@ object NarrowingFunctions2 {
 
     class Foo1(data: Foo) : FooNarrowed(data) {
         var notCommon1: Int
-            get() = safeGet(data.notCommon1)
+            get() = notNull(data.notCommon1)
             set(x) = run { data.notCommon1 = x }
         var pseudoCommon: Int
-            get() = safeGet(data.pseudoCommon)
+            get() = notNull(data.pseudoCommon)
             set(x) = run { data.pseudoCommon = x }
 
         companion object
@@ -75,7 +75,7 @@ object NarrowingFunctions2 {
 
     class Foo2(data: Foo) : FooNarrowed(data) {
         val notCommon2: String
-            get() = safeGet(data.notCommon2)
+            get() = notNull(data.notCommon2)
         var pseudoCommon: Int?
             get() = data.pseudoCommon
             set(x) = run { data.pseudoCommon = x }

@@ -3,25 +3,30 @@ package tryout.polymorphicdata
 
 object PolymorphicData {
 
-    interface Foo {
+    interface FooI {
         val mediaType: String
         val commonA: Int
         var commonB: String
     }
 
+    interface FooData {
+        val data: Foo
+    }
 
-    interface Foo1 : Foo {
+    interface Foo1 : FooI, FooData {
         var notCommon1: Int
 
         companion object
     }
+
+    operator fun Foo1.Companion.invoke(data: Foo): Foo1 = FooU(data)
 
     operator fun Foo1.Companion.invoke(
             commonA: Int,
             commonB: String,
             notCommon1: Int
     ): Foo1 =
-            FooU(FooData(
+            Foo1(Foo(
                     mediaType = Foo1::class.java.simpleName,
                     commonA = commonA,
                     commonB = commonB,
@@ -39,18 +44,20 @@ object PolymorphicData {
                     notCommon1
             )
 
-    interface Foo2 : Foo {
+    interface Foo2 : FooI, FooData {
         val notCommon2: String
 
         companion object
     }
+
+    operator fun Foo2.Companion.invoke(data: Foo): Foo2 = FooU(data)
 
     operator fun Foo2.Companion.invoke(
             commonA: Int,
             commonB: String,
             notCommon2: String
     ): Foo2 =
-            FooU(FooData(
+            Foo2(Foo(
                     mediaType = Foo2::class.java.simpleName,
                     commonA = commonA,
                     commonB = commonB,
@@ -69,25 +76,25 @@ object PolymorphicData {
             )
 
 
-    data class FooU(val data: FooData) : Foo by data, Foo1, Foo2 {
+    data class FooU(override val data: Foo) : FooI by data, Foo1, Foo2 {
         override var notCommon1: Int
-            get() = safeGet(data.notCommon1)
+            get() = notNull(data.notCommon1)
             set(x) = run { data.notCommon1 = x }
         override val notCommon2: String
-            get() = safeGet(data.notCommon2)
+            get() = notNull(data.notCommon2)
 
-        private fun <T : Any> safeGet(prop: T?): T {
+        private fun <T : Any> notNull(prop: T?): T {
             check(prop != null) { "Property not defined for subtype ${data.mediaType}" }
             return prop
         }
     }
 
 
-    data class FooData(
+    data class Foo(
             override val mediaType: String,
             override val commonA: Int,
             override var commonB: String,
             var notCommon1: Int? = null,
             val notCommon2: String? = null
-    ) : Foo
+    ) : FooI
 }

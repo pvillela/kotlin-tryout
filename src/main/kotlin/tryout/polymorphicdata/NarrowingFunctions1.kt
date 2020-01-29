@@ -23,10 +23,10 @@ object NarrowingFunctions1 {
 
     class Foo1Impl(private val data: FooData) : FooU(data), Foo1 {
         override var notCommon1: Int
-            get() = safeGet(data.notCommon1)
+            get() = notNull(data.notCommon1)
             set(x) = run { data.notCommon1 = x }
         override var pseudoCommon: Int
-            get() = safeGet(data.pseudoCommon)
+            get() = notNull(data.pseudoCommon)
             set(x) = run { data.pseudoCommon = x }
     }
 
@@ -64,7 +64,7 @@ object NarrowingFunctions1 {
 
     class Foo2Impl(private val data: FooData) : FooU(data), Foo2 {
         override val notCommon2: String
-            get() = safeGet(data.notCommon2)
+            get() = notNull(data.notCommon2)
         override var pseudoCommon: Int?
             get() = data.pseudoCommon
             set(x) = run { data.pseudoCommon = x }
@@ -98,7 +98,7 @@ object NarrowingFunctions1 {
 
     abstract class FooU(private val data: FooData) : Foo by data {
         override fun toData() = data
-        protected fun <T : Any> safeGet(prop: T?): T {
+        protected fun <T : Any> notNull(prop: T?): T {
             check(prop != null) { "Property not defined for subtype ${data.mediaType}" }
             return prop
         }

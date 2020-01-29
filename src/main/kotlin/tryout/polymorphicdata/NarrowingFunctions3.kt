@@ -34,7 +34,7 @@ object NarrowingFunctions3 {
         else -> throw IllegalArgumentException("Unsupported type $cls")
     }
 
-    fun <T : MediaRecord, U : Any> T.safeGet(prop: U?): U {
+    fun <T : MediaRecord, U : Any> T.notNull(prop: U?): U {
         check(prop != null) { "Property must not be null for mediaType ${this.mediaType}" }
         return prop
     }
@@ -55,8 +55,8 @@ object NarrowingFunctions3 {
                 mediaType = mediaType,
                 commonA = commonA,
                 commonB = commonB,
-                notCommon1 = safeGet(notCommon1),
-                pseudoCommon = safeGet(pseudoCommon)
+                notCommon1 = notNull(notCommon1),
+                pseudoCommon = notNull(pseudoCommon)
         )
     }
 
@@ -86,7 +86,7 @@ object NarrowingFunctions3 {
                 mediaType = mediaType,
                 commonA = commonA,
                 commonB = commonB,
-                notCommon2 = safeGet(notCommon2),
+                notCommon2 = notNull(notCommon2),
                 pseudoCommon = pseudoCommon
         )
     }
