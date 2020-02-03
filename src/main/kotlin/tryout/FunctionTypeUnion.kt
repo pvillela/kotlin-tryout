@@ -12,7 +12,7 @@ object FunctionTypeUnion {
             when (key) {
                 1 -> f1
                 2 -> f2
-                else -> throw java.lang.IllegalArgumentException("Unsupported type.")
+                else -> throw IllegalArgumentException("Unsupported type.")
             } as TFunOut
 
     interface Foo {
