@@ -527,6 +527,30 @@ suspend fun execute(str: String, block: suspend () -> Deferred<Any>) {
 
 fun main() {
     runBlocking {
+        println("***** async coroutineScope")
+        try {
+            val result: Deferred<Int> = coroutineScope {
+                async { throw IllegalStateException("from async coroutineScope") }
+            }
+            println("result=$result")
+            result.await()
+        } catch (e: Exception) {
+            println("Caught outside: $e")
+        }
+        println()
+
+        println("***** async supervisorScope")
+        try {
+            val result: Deferred<Int> = supervisorScope {
+                async { throw IllegalStateException("from async supervisorScope") }
+            }
+            println("result=$result")
+            result.await()
+        } catch (e: Exception) {
+            println("Caught outside: $e")
+        }
+        println()
+
         println("***** f0()")
         try {
             println(f0())
