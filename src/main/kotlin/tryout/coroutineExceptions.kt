@@ -512,6 +512,18 @@ suspend fun f5() = coroutineScope {
     2
 }
 
+suspend fun execute(str: String, block: suspend () -> Deferred<Any>) {
+    println("***** $str")
+    try {
+        val result = block()
+        println("result=$result")
+        result.await()
+    } catch (e: Exception) {
+        println("Caught outside: $e")
+    }
+    println()
+}
+
 
 fun main() {
     runBlocking {
@@ -523,197 +535,33 @@ fun main() {
         }
         println()
 
-        println("***** f1Launch(0)")
-        try {
-            println(f1Launch(0))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
+        execute("f1Launch(0)") { f1Launch(0).second }
+        execute("f1LaunchNoJoin(0)") { f1LaunchNoJoin(0).second }
+        execute("f1LaunchJoinAtEnd(0)") { f1LaunchJoinAtEnd(0).second }
+        execute("f1Async(0)") { f1Async(0).second }
+        execute("f1AsyncNoJoin(0)") { f1AsyncNoJoin(0).second }
+        execute("f1AsyncJoinAtEnd(0)") { f1AsyncJoinAtEnd(0).second }
 
-        println("***** f1LaunchNoJoin(0)")
-        try {
-            println(f1LaunchNoJoin(0))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
+        execute("f1Launch(1000)") { f1Launch(1000).second }
+        execute("f1LaunchNoJoin(1000)") { f1LaunchNoJoin(1000).second }
+        execute("f1LaunchJoinAtEnd(1000)") { f1LaunchJoinAtEnd(1000).second }
+        execute("f1Async(1000)") { f1Async(1000).second }
+        execute("f1AsyncNoJoin(1000)") { f1AsyncNoJoin(1000).second }
+        execute("f1AsyncJoinAtEnd(1000)") { f1AsyncJoinAtEnd(1000).second }
 
-        println("***** f1LaunchJoinAtEnd(0)")
-        try {
-            println(f1LaunchJoinAtEnd(0))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
+        execute("f1LaunchS(0)") { f1LaunchS(0).second }
+        execute("f1LaunchNoJoinS(0)") { f1LaunchNoJoinS(0).second }
+        execute("f1LaunchJoinAtEndS(0)") { f1LaunchJoinAtEndS(0).second }
+        execute("f1AsyncS(0)") { f1AsyncS(0).second }
+        execute("f1AsyncNoJoinS(0)") { f1AsyncNoJoinS(0).second }
+        execute("f1AsyncJoinAtEndS(0)") { f1AsyncJoinAtEndS(0).second }
 
-        println("***** f1Async(0)")
-        try {
-            println(f1Async(0))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1AsyncNoJoin(0)")
-        try {
-            println(f1AsyncNoJoin(0))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1AsyncJoinAtEnd(0)")
-        try {
-            println(f1AsyncJoinAtEnd(0))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1Launch(1000)")
-        try {
-            println(f1Launch(1000))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1LaunchNoJoin(1000)")
-        try {
-            println(f1LaunchNoJoin(1000))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1LaunchJoinAtEnd(1000)")
-        try {
-            println(f1LaunchJoinAtEnd(1000))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1Async(1000)")
-        try {
-            println(f1Async(1000))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1AsyncNoJoin(1000)")
-        try {
-            println(f1AsyncNoJoin(1000))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1AsyncJoinAtEnd(1000)")
-        try {
-            println(f1AsyncJoinAtEnd(1000))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1LaunchS(0)")
-        try {
-            println(f1LaunchS(0))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1LaunchNoJoinS(0)")
-        try {
-            println(f1LaunchNoJoinS(0))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1LaunchJoinAtEndS(0)")
-        try {
-            println(f1LaunchJoinAtEndS(0))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1AsyncS(0)")
-        try {
-            println(f1AsyncS(0))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1AsyncNoJoinS(0)")
-        try {
-            println(f1AsyncNoJoinS(0))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1AsyncJoinAtEndS(0)")
-        try {
-            println(f1AsyncJoinAtEndS(0))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1LaunchS(1000)")
-        try {
-            println(f1LaunchS(1000))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1LaunchNoJoinS(1000)")
-        try {
-            println(f1LaunchNoJoinS(1000))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1LaunchJoinAtEndS(1000)")
-        try {
-            println(f1LaunchJoinAtEndS(1000))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1AsyncS(1000)")
-        try {
-            println(f1AsyncS(1000))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1AsyncNoJoinS(1000)")
-        try {
-            println(f1AsyncNoJoinS(1000))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
-
-        println("***** f1AsyncJoinAtEndS(1000)")
-        try {
-            println(f1AsyncJoinAtEndS(1000))
-        } catch (e: Exception) {
-            println("Caught outside: $e")
-        }
-        println()
+        execute("f1LaunchS(1000)") { f1LaunchS(1000).second }
+        execute("f1LaunchNoJoinS(1000)") { f1LaunchNoJoinS(1000).second }
+        execute("f1LaunchJoinAtEndS(1000)") { f1LaunchJoinAtEndS(1000).second }
+        execute("f1AsyncS(1000)") { f1AsyncS(1000).second }
+        execute("f1AsyncNoJoinS(1000)") { f1AsyncNoJoinS(1000).second }
+        execute("f1AsyncJoinAtEndS(1000)") { f1AsyncJoinAtEndS(1000).second }
 
         println("***** f2()")
         try {
