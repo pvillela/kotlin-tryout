@@ -60,8 +60,8 @@ dependencies {
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:${properties["coroutines_reactive"]}")
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${properties["coroutines_reactor"]}")
 
-    // The dependencyy below triggers an exception
-//    implementation("ch.qos.logback:logback-classic:1.0.13")
+    // The dependencyy below triggers an exception when used together with the Spring dependencies
+    implementation("ch.qos.logback:logback-classic:1.0.13")
 
     implementation("io.projectreactor:reactor-core:3.1.8.RELEASE")
 
