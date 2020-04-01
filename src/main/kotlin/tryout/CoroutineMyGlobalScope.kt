@@ -1,17 +1,19 @@
 package tryout
 
+import arch.util.jobOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
+import tryout.common.wasteCpu
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
 
-object MyGlobalCoroutineScope {
-    
-    val log = LoggerFactory.getLogger(MyGlobalCoroutineScope::class.java)
+object CoroutineMyGlobalScope {
+
+    val log = LoggerFactory.getLogger(CoroutineMyGlobalScope::class.java)
 
     // Implementation identical to that of kotlinx.coroutines.GlobalScope
     val MyGlobalScope = object : CoroutineScope {
@@ -63,6 +65,16 @@ object MyGlobalCoroutineScope {
         log.info("main: Who has survived request cancellation?")
     }
 
+    fun main4() = runBlocking<Unit> { // start main coroutine
+        MyGlobalScope.launch { // launch a new coroutine in background and continue
+//            delay(1000L)
+            wasteCpu(3000L)
+            log.info("World!")
+        }
+        log.info("Hello,") // main coroutine continues here immediately
+        // no delay to keep JVM alive
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         println("\n***** main1")
@@ -73,5 +85,8 @@ object MyGlobalCoroutineScope {
 
         println("\n***** main3")
         main3()
+
+        println("\n***** main4")
+        main4()
     }
 }
