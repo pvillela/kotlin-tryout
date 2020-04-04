@@ -15,8 +15,21 @@ fun main() = runBlocking<Unit> {
         println(this.coroutineContext)
         println(coroutineContext)
     }
+    async {
+        println(this)
+        println(this.coroutineContext)
+        println(coroutineContext)
+    }
+    async {
+        launch {
+            println(this)
+            println(this.coroutineContext)
+            println(coroutineContext)
+        }
+    }
 }
 
 suspend fun scopeCheck(scope: CoroutineScope) {
     println(scope.coroutineContext === coroutineContext)
+    println(coroutineContext)
 }
