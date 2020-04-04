@@ -1,17 +1,18 @@
 package tryout
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.withContext
 import java.lang.IllegalArgumentException
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 
 // Based on
@@ -523,12 +524,37 @@ suspend fun f6LaunchInsideAsync(): Deferred<Int>  {  // suspend modifier only us
     }
 }
 
-suspend fun f7LaunchWithExceptionHandler(): Deferred<Throwable?> {  // suspend modifier only used to allow call with execute below
+suspend fun f7LaunchWithExceptionHandler(): Deferred<Throwable?> {
     var launchException: Throwable? = null
     val handler = CoroutineExceptionHandler { _, exception -> launchException = exception }
     val job = GlobalScope.launch(handler) { throw IllegalArgumentException("launch inside async") }
     job.join()
     return GlobalScope.async { launchException }
+}
+
+// See https://kotlinlang.org/docs/reference/coroutines/exception-handling.html
+suspend fun f8ExceptionInChildCausesOrderlyCancellation(): Deferred<Unit> {
+        val pseudoJob = GlobalScope.async {
+            launch { // the first child
+                try {
+                    delay(Long.MAX_VALUE)
+                } finally {
+                    withContext(NonCancellable) {
+                        println("First child is cancelled as a result.")
+                        delay(100)
+                        println("The first child finished its non cancellable block")
+                    }
+                }
+            }
+            launch { // the second child
+                delay(10)
+                println("Second child throws an exception other than CancellationException")
+//                throw CancellationException()
+                throw ArithmeticException()
+            }
+            Unit
+        }
+        return pseudoJob
 }
 
 
@@ -640,7 +666,7 @@ fun main() {
         println()
 
         execute("f6LaunchInsideAsync()") { f6LaunchInsideAsync() }
-
         execute("f7LaunchWithExceptionHandler") { f7LaunchWithExceptionHandler() }
+        execute("f8ExceptionInChildCausesOrderlyCancellation()") { f8ExceptionInChildCausesOrderlyCancellation() }
     }
 }
