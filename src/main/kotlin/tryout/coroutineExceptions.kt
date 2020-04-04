@@ -518,7 +518,7 @@ suspend fun f5() = coroutineScope {
 
 suspend fun f6LaunchInsideAsync(): Deferred<Int>  {  // suspend modifier only used to allow call with execute below
     return GlobalScope.async {
-        launch { delay(100); throw IllegalArgumentException("launch inside async") }
+        launch { throw IllegalArgumentException("launch inside async") }
         42
     }
 }
@@ -526,7 +526,7 @@ suspend fun f6LaunchInsideAsync(): Deferred<Int>  {  // suspend modifier only us
 suspend fun f7LaunchWithExceptionHandler(): Deferred<Throwable?> {  // suspend modifier only used to allow call with execute below
     var launchException: Throwable? = null
     val handler = CoroutineExceptionHandler { _, exception -> launchException = exception }
-    val job = GlobalScope.launch(handler) { delay(100); throw IllegalArgumentException("launch inside async") }
+    val job = GlobalScope.launch(handler) { throw IllegalArgumentException("launch inside async") }
     job.join()
     return GlobalScope.async { launchException }
 }
