@@ -1,5 +1,6 @@
 package tryout
 
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -8,6 +9,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.supervisorScope
+import java.lang.IllegalArgumentException
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 
 // Based on
@@ -441,7 +445,7 @@ suspend fun f1AsyncJoinAtEndS(waitTime: Long) = supervisorScope {
 }
 
 suspend fun f2() = coroutineScope {
-    val deferred1 : Deferred<Int> = async {
+    val deferred1: Deferred<Int> = async {
         println("Throwing exception from async")
         throw ArithmeticException("From async")
     }
@@ -455,7 +459,7 @@ suspend fun f2() = coroutineScope {
 }
 
 suspend fun f3() = coroutineScope {
-    val deferred1 : Deferred<Int> = async {
+    val deferred1: Deferred<Int> = async {
         println("Throwing exception from async")
         throw ArithmeticException("From async")
     }
@@ -476,7 +480,7 @@ suspend fun f3() = coroutineScope {
 }
 
 suspend fun f4() = coroutineScope {
-    val deferred1 : Deferred<Int> = async {
+    val deferred1: Deferred<Int> = async {
         println("Throwing exception from async")
         throw ArithmeticException("From async")
     }
@@ -497,7 +501,7 @@ suspend fun f4() = coroutineScope {
 }
 
 suspend fun f5() = coroutineScope {
-    val deferred1 : Deferred<Int> = async {
+    val deferred1: Deferred<Int> = async {
         println("Throwing exception from async")
         throw ArithmeticException("From async")
     }
@@ -512,12 +516,28 @@ suspend fun f5() = coroutineScope {
     2
 }
 
-suspend fun execute(str: String, block: suspend () -> Deferred<Any>) {
+suspend fun f6LaunchInsideAsync(): Deferred<Int>  {  // suspend modifier only used to allow call with execute below
+    return GlobalScope.async {
+        launch { delay(100); throw IllegalArgumentException("launch inside async") }
+        42
+    }
+}
+
+suspend fun f7LaunchWithExceptionHandler(): Deferred<Throwable?> {  // suspend modifier only used to allow call with execute below
+    var launchException: Throwable? = null
+    val handler = CoroutineExceptionHandler { _, exception -> launchException = exception }
+    val job = GlobalScope.launch(handler) { delay(100); throw IllegalArgumentException("launch inside async") }
+    job.join()
+    return GlobalScope.async { launchException }
+}
+
+
+suspend fun execute(str: String, block: suspend () -> Deferred<*>) {
     println("***** $str")
     try {
         val result = block()
         println("result=$result")
-        result.await()
+        println("result.await()=${result.await()}")
     } catch (e: Exception) {
         println("Caught outside: $e")
     }
@@ -618,5 +638,9 @@ fun main() {
             println("Caught outside: $e")
         }
         println()
+
+        execute("f6LaunchInsideAsync()") { f6LaunchInsideAsync() }
+
+        execute("f7LaunchWithExceptionHandler") { f7LaunchWithExceptionHandler() }
     }
 }
