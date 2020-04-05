@@ -517,7 +517,7 @@ suspend fun f5() = coroutineScope {
     2
 }
 
-suspend fun f6LaunchInsideAsync(): Deferred<Int>  {  // suspend modifier only used to allow call with execute below
+suspend fun f6LaunchInsideAsync(): Deferred<Int> {  // suspend modifier only used to allow call with execute below
     return GlobalScope.async {
         launch { throw IllegalArgumentException("launch inside async") }
         42
@@ -534,27 +534,57 @@ suspend fun f7LaunchWithExceptionHandler(): Deferred<Throwable?> {
 
 // See https://kotlinlang.org/docs/reference/coroutines/exception-handling.html
 suspend fun f8ExceptionInChildCausesOrderlyCancellation(): Deferred<Unit> {
-        val pseudoJob = GlobalScope.async {
-            launch { // the first child
-                try {
-                    delay(Long.MAX_VALUE)
-                } finally {
-                    withContext(NonCancellable) {
-                        println("First child is cancelled as a result.")
-                        delay(100)
-                        println("The first child finished its non cancellable block")
-                    }
+    val pseudoJob = GlobalScope.async {
+        launch {
+            // the first child
+            try {
+                delay(Long.MAX_VALUE)
+                println("First child is not cancelled.")
+            } catch (e: CancellationException) {
+                withContext(NonCancellable) {
+                    println("First child is cancelled as a result.")
+                    delay(100)
+                    println("The first child finished its non cancellable block")
                 }
             }
-            launch { // the second child
-                delay(10)
-                println("Second child throws an exception other than CancellationException")
-//                throw CancellationException()
-                throw ArithmeticException()
-            }
-            Unit
         }
-        return pseudoJob
+        launch {
+            // the second child
+            delay(10)
+            println("Second child throws an exception other than CancellationException")
+//                throw CancellationException()
+            throw ArithmeticException()
+        }
+        Unit
+    }
+    return pseudoJob
+}
+
+// See https://kotlinlang.org/docs/reference/coroutines/exception-handling.html
+suspend fun f9SupervisorScopeInCoroutineScope() = coroutineScope {
+    launch {
+        // the first child
+        try {
+            delay(200)
+            println("First child is not cancelled.")
+        } catch (e: CancellationException) {
+            withContext(NonCancellable) {
+                println("First child is cancelled as a result.")
+                delay(100)
+                println("The first child finished its non cancellable block")
+            }
+        }
+    }
+    val pseudoJob = supervisorScope {
+        async {
+            // the second child
+            delay(10)
+            println("Second child throws an exception other than CancellationException")
+//                throw CancellationException()
+            throw ArithmeticException()
+        }
+    }
+    pseudoJob
 }
 
 
@@ -668,5 +698,6 @@ fun main() {
         execute("f6LaunchInsideAsync()") { f6LaunchInsideAsync() }
         execute("f7LaunchWithExceptionHandler") { f7LaunchWithExceptionHandler() }
         execute("f8ExceptionInChildCausesOrderlyCancellation()") { f8ExceptionInChildCausesOrderlyCancellation() }
+        execute("f9SupervisorScopeInCoroutineScope()") { f9SupervisorScopeInCoroutineScope() }
     }
 }
