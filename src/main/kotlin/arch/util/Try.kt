@@ -5,7 +5,7 @@ package arch.util
  * Reifies a try-catch block into a union type with [Success] and [Failure] cases.  Simplified
  * version of Scala's Try class.
  */
-sealed class Try<T> {
+sealed class Try<out T> {
 
     companion object {
 
@@ -34,7 +34,7 @@ sealed class Try<T> {
 /**
  * Success case of [Try], representing the result of a computation that did not throw an exception.
  */
-data class Success<T>(override val value: T) : Try<T>() {
+data class Success<out T>(override val value: T) : Try<T>() {
 
     override fun isSuccess(): Boolean = true
 
@@ -47,7 +47,7 @@ data class Success<T>(override val value: T) : Try<T>() {
 /**
  * Failure case of [Try], representing the result of a computation that threw an exception.
  */
-data class Failure<T>(override val exception: Throwable) : Try<T>() {
+data class Failure<out T>(override val exception: Throwable) : Try<T>() {
 
     override fun isSuccess(): Boolean = false
 
