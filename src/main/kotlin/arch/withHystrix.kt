@@ -3,7 +3,7 @@
  * and implemented in this file.
  */
 
-package presto.arch.hystrix
+package arch
 
 import reactor.core.publisher.Mono
 import com.netflix.hystrix.HystrixObservableCommand
