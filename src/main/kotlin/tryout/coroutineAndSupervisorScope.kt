@@ -56,7 +56,7 @@ fun main() {
         println("coroutineScope completes with success if all nested coroutines succeed")
         val res = coroutineScope {
 
-            val deferred1a = async {
+            val deferred1 = async {
                 log.info("In async 1, before delay ...")
                 delay(100)
                 log.info("... completed async 1 after delay")
@@ -78,7 +78,7 @@ fun main() {
             the first exception to occur""")
         try {
             coroutineScope {
-                val deferred2a = async {
+                val deferred2 = async {
                     log.info("In async 2, before delay ...")
                     delay(200)
                     log.info("... async 2 after delay, about to throw")
@@ -101,7 +101,7 @@ fun main() {
             completes with the first exception to occur""")
         try {
             coroutineScope {
-                val deferred2a = async {
+                val deferred3 = async {
                     log.info("In async 3, before delay ...")
                     delay(100)
                     log.info("... async 3 after delay, about to throw")
@@ -123,14 +123,14 @@ fun main() {
         println("supervisorScope can complete with success even if all nested coroutines fail")
         val resS1 = supervisorScope {
 
-            val deferred1a = async {
+            val deferred1 = async {
                 log.info("In async 1, before delay ...")
                 delay(100)
                 log.info("... async 1 after delay, about to throw")
                 throw Exception("Boom async 1")
             }
 
-            scope.launch {
+            launch {
                 log.info("In launch 1, before delay ...")
                 delay(10)
                 log.info("... launch 1 after delay, about to throw")
@@ -146,14 +146,14 @@ fun main() {
         println("Again, supervisorScope can completes with success even if all nested coroutines fail")
         val resS2 = supervisorScope {
 
-            val deferred1a = async {
+            val deferred2 = async {
                 log.info("In async 2, before delay ...")
                 delay(10)
                 log.info("... async 2 after delay, about to throw")
                 throw Exception("Boom async 2")
             }
 
-            scope.launch {
+            launch {
                 log.info("In launch 2, before delay ...")
                 delay(100)
                 log.info("... launch 2 after delay, about to throw")
@@ -165,5 +165,6 @@ fun main() {
         println("Exited supervisorScope")
         log.info("res=$resS2")
     }
-    log.info("*** Exited runBlocking")
+
+    println("\n*** Exited runBlocking")
 }
