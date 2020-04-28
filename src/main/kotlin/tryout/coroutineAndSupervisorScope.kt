@@ -8,6 +8,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.supervisorScope
 import org.slf4j.LoggerFactory
 
 
@@ -49,6 +50,7 @@ fun main() {
                 throw Exception("Boom scope.launch 2")
             }
         }
+        log.info("Exited coroutineScope")
 
         println("\n********************")
         println("coroutineScope completes with success if all nested coroutines succeed")
@@ -56,7 +58,7 @@ fun main() {
 
             val deferred1a = async {
                 log.info("In async 1, before delay ...")
-                delay(1)
+                delay(100)
                 log.info("... completed async 1 after delay")
             }
 
@@ -68,7 +70,7 @@ fun main() {
 
             42
         }
-
+        println("Exited coroutineScope")
         log.info("res=$res")
 
         println("\n********************")
@@ -91,12 +93,12 @@ fun main() {
                 }
             }
         } catch (e: java.lang.Exception) {
-            log.info("Caught $e in runBlocking")
+            log.info("Caught $e thrown by coroutineScope")
         }
 
         println("\n********************")
         println("""Again, if nested coroutines complete with exceptions, coroutineScope
-            completes withthe first exception to occur""")
+            completes with the first exception to occur""")
         try {
             coroutineScope {
                 val deferred2a = async {
@@ -110,16 +112,58 @@ fun main() {
                     log.info("In launch 3, before delay ...")
                     delay(200)
                     log.info("... launch 3 after delay, about to throw")
-                    throw Exception("Boom launch 2")
+                    throw Exception("Boom launch 3")
                 }
             }
         } catch (e: java.lang.Exception) {
-            log.info("Caught $e in runBlocking")
+            log.info("Caught $e thrown by coroutineScope")
         }
 
-        println()
-        log.info("*** Exiting runBlocking")
-    }
+        println("\n********************")
+        println("supervisorScope can complete with success even if all nested coroutines fail")
+        val resS1 = supervisorScope {
 
+            val deferred1a = async {
+                log.info("In async 1, before delay ...")
+                delay(100)
+                log.info("... async 1 after delay, about to throw")
+                throw Exception("Boom async 1")
+            }
+
+            scope.launch {
+                log.info("In launch 1, before delay ...")
+                delay(10)
+                log.info("... launch 1 after delay, about to throw")
+                throw Exception("Boom launch 1")
+            }
+
+            42
+        }
+        println("Exited supervisorScope")
+        log.info("res=$resS1")
+
+        println("\n********************")
+        println("Again, supervisorScope can completes with success even if all nested coroutines fail")
+        val resS2 = supervisorScope {
+
+            val deferred1a = async {
+                log.info("In async 2, before delay ...")
+                delay(10)
+                log.info("... async 2 after delay, about to throw")
+                throw Exception("Boom async 2")
+            }
+
+            scope.launch {
+                log.info("In launch 2, before delay ...")
+                delay(100)
+                log.info("... launch 2 after delay, about to throw")
+                throw Exception("Boom launch 2")
+            }
+
+            42
+        }
+        println("Exited supervisorScope")
+        log.info("res=$resS2")
+    }
     log.info("*** Exited runBlocking")
 }
