@@ -2,7 +2,8 @@ package tryout
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -14,7 +15,8 @@ import org.slf4j.LoggerFactory
 
 fun main() {
     val log = LoggerFactory.getLogger("coroutineScopeExample")
-    val scope = CoroutineScope(Dispatchers.Default + Job())
+    val scope = CoroutineScope((Dispatchers.Default))
+    val scopeS = CoroutineScope((Dispatchers.Default) + SupervisorJob())
 
     runBlocking {
 
@@ -164,6 +166,55 @@ fun main() {
         }
         println("Exited supervisorScope")
         log.info("res=$resS2")
+
+        println("\n********************")
+        println("""GlobalScope's lack of a job means that exceptions in child coroutines have not effect 
+                   on other children. """)
+        GlobalScope.async {
+            log.info("async 1 about to throw")
+            throw Exception("Boom async 1")
+        }.join()
+        println("Threw exception in GlobalScope")
+        val dg2 = GlobalScope.async {
+            log.info("In async 2, before delay ...")
+            delay(100)
+            42
+        }
+        println(dg2.await())
+
+        println("\n********************")
+        println("""Since scope has a default Job, exceptions in child coroutines impact other children. """)
+        scope.launch {
+            log.info("launch in scope about to throw")
+            throw Exception("Boom launch in scope")
+        }.join()
+        println("Threw exception in scope")
+        val dj2 = scope.async {
+            log.info("In async, before delay ...")
+            delay(100)
+            42
+        }
+        println(
+                try {
+                    dj2.await()
+                } catch (e: Exception) {
+                    e
+                }
+        )
+
+        println("\n********************")
+        println("""Since scopeS has a SupervisorJob, exceptions in child coroutines do not impact other children.""")
+        scopeS.launch {
+            log.info("launch 1 about to throw")
+            throw Exception("Boom launch in scopeS")
+        }.join()
+        println("Threw exception in scopeS")
+        val ds2 = scopeS.async {
+            log.info("In async, before delay ...")
+            delay(100)
+            42
+        }
+        println(ds2.await())
     }
 
     println("\n*** Exited runBlocking")
