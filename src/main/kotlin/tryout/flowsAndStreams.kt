@@ -43,10 +43,11 @@ object FlowsAndTimeouts {
     @ExperimentalCoroutinesApi
     val intsCC: Flow<Int> = channelFlow {
         val intakeChannel = Channel<Int>()
+        val n = 10
 
         // Takes messages from intakeChannel and emits them
         launch {
-            (1..10).forEach {
+            (1..n).forEach {
                 yield()
                 val i = intakeChannel.receive()
                 println("Sending $i from intakeChannel.")
@@ -55,7 +56,7 @@ object FlowsAndTimeouts {
             intakeChannel.close()
         }
 
-        for (i in 1..10) {
+        for (i in 1..n) {
             val result = withTimeoutOrNull(50) {
                 println("Sending $i to intakeChannel")
                 intakeChannel.send(i)
