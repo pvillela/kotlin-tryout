@@ -1,6 +1,5 @@
 package tryout
 
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
@@ -90,6 +89,66 @@ fun main() {
 
         try {
             val result = parentJob.await()
+            println(result)
+        } catch (e: Exception) {
+            println("e: $e")
+            println("cause: ${e.cause}")
+        }
+    }
+
+    runBlocking {
+        println("\n********************")
+        println("""Cancelling a cancelled Deferred does nothing.""")
+
+        val pseudoJob = async {
+            delay(1000)
+            42
+        }
+
+        try {
+            pseudoJob.cancel()
+            val result = pseudoJob.await()
+            println(result)
+        } catch (e: Exception) {
+            println("e: $e")
+            println("cause: ${e.cause}")
+        }
+
+        try {
+            pseudoJob.cancel() // second cancel
+            pseudoJob.cancel() // third cancel
+            val result = pseudoJob.await()
+            println(result)
+        } catch (e: Exception) {
+            println("e: $e")
+            println("cause: ${e.cause}")
+        }
+    }
+
+    runBlocking {
+        println("\n********************")
+        println("""Cancelling a completed Deferred does nothing.""")
+
+        val pseudoJob = async {
+            delay(100)
+            42
+        }
+
+        pseudoJob.join()
+
+        try {
+            pseudoJob.cancel()
+            val result = pseudoJob.await()
+            println(result)
+        } catch (e: Exception) {
+            println("e: $e")
+            println("cause: ${e.cause}")
+        }
+
+        try {
+            pseudoJob.cancel() // second cancel
+            pseudoJob.cancel() // third cancel
+            val result = pseudoJob.await()
             println(result)
         } catch (e: Exception) {
             println("e: $e")
