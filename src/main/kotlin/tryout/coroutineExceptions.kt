@@ -557,7 +557,7 @@ suspend fun f8ExceptionInChildCausesOrderlyCancellation(): Deferred<Unit> {
                 }
             }
         }
-        launch {
+        val dummy = async {
             // the second child
             delay(10)
             println("Second child throws an exception other than CancellationException")
