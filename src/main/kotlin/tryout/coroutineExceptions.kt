@@ -7,6 +7,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -612,10 +613,8 @@ suspend fun f10CancellationWithSideEffect() = coroutineScope {
             internalJob.await()
         } catch (e: Exception) {
             println("%%% Cancellation side-effect %%%")
-            internalJob.cancel()
-            // In case of cancellation of externalJob, wait while internalJob goes through
-            // its cancellation.
-            internalJob.await()
+            internalJob.cancelAndJoin()
+            throw e
         }
     }
     yield()
@@ -639,10 +638,8 @@ suspend fun f10aCancellationWithSideEffect() = coroutineScope {
             internalJob.await()
         } catch (e: Exception) {
             println("%%% Cancellation side-effect %%%")
-            internalJob.cancel()
-            // In case of cancellation of externalJob, wait while internalJob goes through
-            // its cancellation.
-            internalJob.await()
+            internalJob.cancelAndJoin()
+            throw e
         }
     }
     yield()
@@ -660,10 +657,8 @@ suspend fun f10bCancellationWithSideEffect() = coroutineScope {
             internalJob.await()
         } catch (e: Exception) {
             println("%%% Cancellation side-effect %%%")
-            internalJob.cancel()
-            // In case of cancellation of externalJob, wait while internalJob goes through
-            // its cancellation.
-            internalJob.await()
+            internalJob.cancelAndJoin()
+            throw e
         }
     }
     yield()
