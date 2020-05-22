@@ -6,13 +6,14 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
-import java.lang.IllegalArgumentException
+import kotlinx.coroutines.yield
 
 
 // Based on
@@ -524,6 +525,13 @@ suspend fun f6LaunchInsideAsync(): Deferred<Int> {  // suspend modifier only use
     }
 }
 
+suspend fun f6aLaunchInsideAsync(): Deferred<Int> {  // suspend modifier only used to allow call with execute below
+    return GlobalScope.async {
+        launch { throw CancellationException("launch inside async") }
+        42
+    }
+}
+
 suspend fun f7LaunchWithExceptionHandler(): Deferred<Throwable?> {
     var launchException: Throwable? = null
     val handler = CoroutineExceptionHandler { _, exception -> launchException = exception }
@@ -587,6 +595,50 @@ suspend fun f9SupervisorScopeInCoroutineScope() = coroutineScope {
     pseudoJob
 }
 
+suspend fun f10CancellationWithSideEffect() = coroutineScope {
+    val internalJob: Deferred<Int> = async {
+        try {
+            delay(1000)
+            42
+        } catch (e: CancellationException) {
+            println("%%% internalJob cancelled %%%")
+            99
+        }
+    }
+    val externalJob = async {
+        try {
+            internalJob.await()
+        } catch (e: CancellationException) {
+            println("%%% Cancellation side-effect %%%")
+            internalJob.cancel()
+        }
+    }
+    yield()
+    externalJob.cancel("I forced the cancellation", ArithmeticException("I forced the cancellation"))
+    externalJob
+}
+
+suspend fun f10aCancellationWithSideEffect() = coroutineScope {
+    val internalJob: Deferred<Int> = async {
+        try {
+            delay(1000)
+            42
+        } catch (e: CancellationException) {
+            println("%%% internalJob cancelled %%%")
+            99
+        }
+    }
+    val externalJob = async {
+        try {
+            internalJob.await()
+        } catch (e: CancellationException) {
+            println("%%% Cancellation side-effect %%%")
+            internalJob.cancel()
+        }
+    }
+    yield()
+    externalJob
+}
 
 suspend fun execute(str: String, block: suspend () -> Deferred<*>) {
     println("***** $str")
@@ -595,7 +647,7 @@ suspend fun execute(str: String, block: suspend () -> Deferred<*>) {
         println("result=$result")
         println("result.await()=${result.await()}")
     } catch (e: Exception) {
-        println("Caught outside: $e")
+        println("Caught outside: $e, cause=${e.cause}")
     }
     println()
 }
@@ -696,8 +748,11 @@ fun main() {
         println()
 
         execute("f6LaunchInsideAsync()") { f6LaunchInsideAsync() }
+        execute("f6aLaunchInsideAsync()") { f6aLaunchInsideAsync() }
         execute("f7LaunchWithExceptionHandler") { f7LaunchWithExceptionHandler() }
         execute("f8ExceptionInChildCausesOrderlyCancellation()") { f8ExceptionInChildCausesOrderlyCancellation() }
         execute("f9SupervisorScopeInCoroutineScope()") { f9SupervisorScopeInCoroutineScope() }
+        execute("f10CancellationWithSideEffect()") { f10CancellationWithSideEffect() }
+        execute("f10aCancellationWithSideEffect()") { f10aCancellationWithSideEffect() }
     }
 }
