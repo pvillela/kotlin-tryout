@@ -602,19 +602,23 @@ suspend fun f10CancellationWithSideEffect() = coroutineScope {
             42
         } catch (e: CancellationException) {
             println("%%% internalJob cancelled %%%")
+            delay(1000)
+            println("internalJob doing stuff during cancellation.")
             99
         }
     }
     val externalJob = async {
         try {
             internalJob.await()
-        } catch (e: CancellationException) {
+        } catch (e: Exception) {
             println("%%% Cancellation side-effect %%%")
             internalJob.cancel()
+            // In case of cancellation of externalJob, wait while internalJob goes through
+            // its cancellation.
+            internalJob.await()
         }
     }
     yield()
-    externalJob.cancel("I forced the cancellation", ArithmeticException("I forced the cancellation"))
     externalJob
 }
 
@@ -625,15 +629,41 @@ suspend fun f10aCancellationWithSideEffect() = coroutineScope {
             42
         } catch (e: CancellationException) {
             println("%%% internalJob cancelled %%%")
+            delay(1000)
+            println("internalJob doing stuff during cancellation.")
             99
         }
     }
     val externalJob = async {
         try {
             internalJob.await()
-        } catch (e: CancellationException) {
+        } catch (e: Exception) {
             println("%%% Cancellation side-effect %%%")
             internalJob.cancel()
+            // In case of cancellation of externalJob, wait while internalJob goes through
+            // its cancellation.
+            internalJob.await()
+        }
+    }
+    yield()
+    externalJob.cancel("Cancellation from the outside", ArithmeticException("Cancellation from the outside"))
+    externalJob
+}
+
+suspend fun f10bCancellationWithSideEffect() = coroutineScope {
+    val internalJob: Deferred<Int> = async {
+        delay(1000)
+        throw Exception("My internal job exception")
+    }
+    val externalJob = async {
+        try {
+            internalJob.await()
+        } catch (e: Exception) {
+            println("%%% Cancellation side-effect %%%")
+            internalJob.cancel()
+            // In case of cancellation of externalJob, wait while internalJob goes through
+            // its cancellation.
+            internalJob.await()
         }
     }
     yield()
@@ -754,5 +784,6 @@ fun main() {
         execute("f9SupervisorScopeInCoroutineScope()") { f9SupervisorScopeInCoroutineScope() }
         execute("f10CancellationWithSideEffect()") { f10CancellationWithSideEffect() }
         execute("f10aCancellationWithSideEffect()") { f10aCancellationWithSideEffect() }
+        execute("f10bCancellationWithSideEffect()") { f10bCancellationWithSideEffect() }
     }
 }
