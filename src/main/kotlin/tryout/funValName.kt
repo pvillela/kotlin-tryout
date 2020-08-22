@@ -123,4 +123,7 @@ fun main() {
 
     println("\n*** qualified name ***")
     funValQualifiedNames.map(::println)
+
+    println("\n*** property name ***")
+    println(vFuz.name)
 }
