@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val kotlin_version: String by extra
 buildscript {
     var kotlin_version: String by extra
-    kotlin_version = "1.4.21"
+    kotlin_version = "1.5.10"
     repositories {
         mavenCentral()
     }
@@ -14,7 +14,7 @@ buildscript {
 
 plugins {
     application
-    id("org.jetbrains.kotlin.jvm") version "1.4.21"
+    id("org.jetbrains.kotlin.jvm") version "1.5.10"
 //    id("org.jetbrains.kotlin.plugin.spring") version "1.2.51"
 //    id("org.springframework.boot") version "2.0.3.RELEASE"
 //    id("io.spring.dependency-management") version "1.0.6.RELEASE"
