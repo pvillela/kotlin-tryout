@@ -8,7 +8,7 @@ package tryout.moduleconfig.pushtofunction.startup
 
 import tryout.moduleconfig.pushtofunction.fwk.AppCfgInfo
 import tryout.moduleconfig.pushtofunction.fwk.getAppConfiguration
-import tryout.moduleconfig.pushtofunction.mod.fooSflBoot
+import tryout.moduleconfig.pushtofunction.foosfl.fooSflBoot
 
 val fooSfl = fooSflBoot(::getAppConfiguration)
 
