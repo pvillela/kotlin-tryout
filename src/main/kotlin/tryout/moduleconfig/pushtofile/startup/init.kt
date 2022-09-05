@@ -6,7 +6,7 @@
 
 package tryout.moduleconfig.pushtofile.startup
 
-import tryout.moduleconfig.pushtofile.fwk.getAppConfiguration
+import tryout.moduleconfig.pushtofile.startup.getAppConfiguration
 import tryout.moduleconfig.pushtofile.fs.barBfAdapterCfgSrc
 import tryout.moduleconfig.pushtofile.fs.fooSflAdapterCfgSrc
 

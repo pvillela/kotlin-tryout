@@ -10,7 +10,7 @@ import tryout.moduleconfig.pushtofunction.fs.FooSflCfgInfo
 import tryout.moduleconfig.pushtofunction.fs.FooSflCfgSrc
 import tryout.moduleconfig.pushtofunction.fs.FooSflT
 import tryout.moduleconfig.pushtofunction.fs.fooSflC
-import tryout.moduleconfig.pushtofunction.fwk.AppCfgInfo
+import tryout.moduleconfig.pushtofunction.startup.AppCfgInfo
 
 fun fooSflBoot(appCfg: () -> AppCfgInfo): FooSflT {
 	val fooSflCfgSrc = FooSflCfgSrc(

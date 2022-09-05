@@ -6,7 +6,7 @@
 
 package tryout.moduleconfig.pushtofile.fs
 
-import tryout.moduleconfig.pushtofile.fwk.AppCfgInfo
+import tryout.moduleconfig.pushtofile.startup.AppCfgInfo
 import tryout.moduleconfig.pushtofile.fwk.makeConfigSource
 
 fun fooSflCfgAdapter(appCfg: AppCfgInfo): FooSflCfgInfo {

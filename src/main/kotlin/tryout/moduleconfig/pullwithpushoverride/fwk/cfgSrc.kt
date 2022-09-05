@@ -6,6 +6,9 @@
 
 package tryout.moduleconfig.pullwithpushoverride.fwk
 
+import tryout.moduleconfig.pullwithpushoverride.startup.AppCfgInfo
+import tryout.moduleconfig.pullwithpushoverride.startup.getAppConfiguration
+
 interface CfgSrc<T> {
 	fun set(infoSrc: () -> T)
 	fun get(): T

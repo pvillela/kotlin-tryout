@@ -10,7 +10,7 @@ import tryout.moduleconfig.pushtofunction.fs.BarBfCfgInfo
 import tryout.moduleconfig.pushtofunction.fs.BarBfCfgSrc
 import tryout.moduleconfig.pushtofunction.fs.BarBfT
 import tryout.moduleconfig.pushtofunction.fs.barBfC
-import tryout.moduleconfig.pushtofunction.fwk.AppCfgInfo
+import tryout.moduleconfig.pushtofunction.startup.AppCfgInfo
 
 fun barBfBoot(appCfg: () -> AppCfgInfo): BarBfT {
 	val barBfCfgSrc = BarBfCfgSrc(

@@ -6,6 +6,8 @@
 
 package tryout.moduleconfig.pushtofile.fwk
 
+import tryout.moduleconfig.pushtofile.startup.AppCfgInfo
+
 interface CfgSrc<T> {
 	fun set(infoSrc: () -> T)
 	fun get(): T
