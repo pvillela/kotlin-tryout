@@ -4,15 +4,13 @@
  * that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pushtofunction.foosfl
+package tryout.moduleconfig.pushtofunction.foosfl.boot
 
+import tryout.moduleconfig.pushtofunction.foosfl.FooSflCfgInfo
+import tryout.moduleconfig.pushtofunction.foosfl.FooSflCfgSrc
+import tryout.moduleconfig.pushtofunction.foosfl.FooSflT
+import tryout.moduleconfig.pushtofunction.foosfl.fooSflC
 import tryout.moduleconfig.pushtofunction.fwk.AppCfgInfo
-
-fun fooSflCfgAdapter(appCfg: AppCfgInfo): FooSflCfgInfo {
-	return FooSflCfgInfo(
-		appCfg.x,
-	)
-}
 
 fun fooSflBoot(appCfg: () -> AppCfgInfo): FooSflT {
 	val fooSflCfgSrc = FooSflCfgSrc(
@@ -20,4 +18,10 @@ fun fooSflBoot(appCfg: () -> AppCfgInfo): FooSflT {
 		barBfBoot(appCfg)
 	)
 	return fooSflC(fooSflCfgSrc)
+}
+
+fun fooSflCfgAdapter(appCfg: AppCfgInfo): FooSflCfgInfo {
+	return FooSflCfgInfo(
+		appCfg.x,
+	)
 }
