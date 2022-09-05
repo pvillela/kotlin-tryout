@@ -14,14 +14,14 @@ import tryout.moduleconfig.pushtofunction.fwk.AppCfgInfo
 
 fun fooSflBoot(appCfg: () -> AppCfgInfo): FooSflT {
 	val fooSflCfgSrc = FooSflCfgSrc(
-		{ fooSflCfgAdapter(appCfg()) },
-		barBfBoot(appCfg)
+		get = { fooSflCfgAdapter(appCfg()) },
+		bar = barBfBoot(appCfg)
 	)
 	return fooSflC(fooSflCfgSrc)
 }
 
 fun fooSflCfgAdapter(appCfg: AppCfgInfo): FooSflCfgInfo {
 	return FooSflCfgInfo(
-		appCfg.x,
+		x = appCfg.x,
 	)
 }

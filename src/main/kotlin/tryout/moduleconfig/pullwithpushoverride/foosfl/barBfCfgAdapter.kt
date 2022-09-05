@@ -10,6 +10,6 @@ import tryout.moduleconfig.pullwithpushoverride.fwk.AppCfgInfo
 
 fun barBfCfgAdapter(appCfg: AppCfgInfo): BarBfCfgInfo {
 	return BarBfCfgInfo(
-		appCfg.y,
+		z = appCfg.y,
 	)
 }

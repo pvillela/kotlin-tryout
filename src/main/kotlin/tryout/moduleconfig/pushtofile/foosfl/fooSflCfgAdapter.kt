@@ -11,7 +11,7 @@ import tryout.moduleconfig.pushtofile.fwk.makeConfigSource
 
 fun fooSflCfgAdapter(appCfg: AppCfgInfo): FooSflCfgInfo {
 	return FooSflCfgInfo(
-		appCfg.x,
+		x = appCfg.x,
 	)
 }
 

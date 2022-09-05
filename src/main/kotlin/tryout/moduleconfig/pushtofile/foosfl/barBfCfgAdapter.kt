@@ -11,7 +11,7 @@ import tryout.moduleconfig.pushtofile.fwk.makeConfigSource
 
 fun barBfCfgAdapter(appCfg: AppCfgInfo): BarBfCfgInfo {
 	return BarBfCfgInfo(
-		appCfg.y,
+		z = appCfg.y,
 	)
 }
 

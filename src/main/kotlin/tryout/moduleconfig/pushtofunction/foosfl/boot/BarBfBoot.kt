@@ -14,13 +14,13 @@ import tryout.moduleconfig.pushtofunction.fwk.AppCfgInfo
 
 fun barBfBoot(appCfg: () -> AppCfgInfo): BarBfT {
 	val barBfCfgSrc = BarBfCfgSrc(
-		{ barBfCfgAdapter(appCfg()) }
+		get = { barBfCfgAdapter(appCfg()) }
 	)
 	return barBfC(barBfCfgSrc)
 }
 
 fun barBfCfgAdapter(appCfg: AppCfgInfo): BarBfCfgInfo {
 	return BarBfCfgInfo(
-		appCfg.y,
+		z = appCfg.y,
 	)
 }

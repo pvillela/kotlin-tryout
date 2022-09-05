@@ -10,6 +10,6 @@ import tryout.moduleconfig.pullwithpushoverride.fwk.AppCfgInfo
 
 fun fooSflCfgAdapter(appCfg: AppCfgInfo): FooSflCfgInfo {
 	return FooSflCfgInfo(
-		appCfg.x,
+		x = appCfg.x,
 	)
 }
