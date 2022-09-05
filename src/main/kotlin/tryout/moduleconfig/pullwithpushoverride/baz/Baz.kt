@@ -4,17 +4,16 @@
  *  that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pushtofile.mod
+package tryout.moduleconfig.pullwithpushoverride.baz
 
-import tryout.moduleconfig.pullwithpushoverride.fwk.CfgSrc
 import tryout.moduleconfig.pullwithpushoverride.fwk.makeConfigSource
 
-data class BarBfCfgInfo(
-	val z: Int
+fun baz() {
+	println(bazCfgSrc.get().w.length);
+}
+
+data class BazCfgInfo(
+	val w: String
 )
 
-val barBfCfgSrc: CfgSrc<BarBfCfgInfo> = makeConfigSource()
-
-fun barBf() {
-	println(barBfCfgSrc.get().z)
-}
+val bazCfgSrc = makeConfigSource<BazCfgInfo>();

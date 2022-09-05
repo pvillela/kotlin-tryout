@@ -4,7 +4,7 @@
  *  that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pullwithpushoverride.mod
+package tryout.moduleconfig.pullwithpushoverride.foosfl
 
 import tryout.moduleconfig.pullwithpushoverride.fwk.CfgSrc
 import tryout.moduleconfig.pullwithpushoverride.fwk.makeConfigSource

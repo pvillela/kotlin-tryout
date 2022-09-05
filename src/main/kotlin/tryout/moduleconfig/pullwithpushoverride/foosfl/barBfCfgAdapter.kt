@@ -4,12 +4,12 @@
  * that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pullwithpushoverride.mod
+package tryout.moduleconfig.pullwithpushoverride.foosfl
 
 import tryout.moduleconfig.pullwithpushoverride.fwk.AppCfgInfo
 
-fun fooSflCfgAdapter(appCfg: AppCfgInfo): FooSflCfgInfo {
-	return FooSflCfgInfo(
-		appCfg.x,
+fun barBfCfgAdapter(appCfg: AppCfgInfo): BarBfCfgInfo {
+	return BarBfCfgInfo(
+		appCfg.y,
 	)
 }

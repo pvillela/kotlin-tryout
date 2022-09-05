@@ -6,7 +6,7 @@
 
 package tryout.moduleconfig.pullwithpushoverride.run
 
-import tryout.moduleconfig.pullwithpushoverride.mod.*
+import tryout.moduleconfig.pullwithpushoverride.foosfl.*
 
 fun main() {
 	fooSflCfgSrc.set({

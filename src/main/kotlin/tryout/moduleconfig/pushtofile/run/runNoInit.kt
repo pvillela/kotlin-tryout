@@ -6,8 +6,7 @@
 
 package tryout.moduleconfig.pushtofile.run
 
-import tryout.moduleconfig.pushtofile.mod.fooSfl
-import tryout.moduleconfig.pushtofile.startup.initialize
+import tryout.moduleconfig.pushtofile.foosfl.fooSfl
 
 fun main() {
 	fooSfl()
