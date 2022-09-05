@@ -4,21 +4,21 @@
  * that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pushtofile.foosfl
+package tryout.moduleconfig.pushtofile.fs
 
 import tryout.moduleconfig.pushtofile.fwk.AppCfgInfo
 import tryout.moduleconfig.pushtofile.fwk.makeConfigSource
 
-fun fooSflCfgAdapter(appCfg: AppCfgInfo): FooSflCfgInfo {
-	return FooSflCfgInfo(
-		x = appCfg.x,
+fun barBfCfgAdapter(appCfg: AppCfgInfo): BarBfCfgInfo {
+	return BarBfCfgInfo(
+		z = appCfg.y,
 	)
 }
 
-val fooSflAdapterCfgSrc = run {
+val barBfAdapterCfgSrc = run {
 	val cfgSrc = makeConfigSource<AppCfgInfo>();
-	fooSflCfgSrc.set({
-		fooSflCfgAdapter(cfgSrc.get());
+	barBfCfgSrc.set({
+		barBfCfgAdapter(cfgSrc.get());
 	});
 	cfgSrc
 }

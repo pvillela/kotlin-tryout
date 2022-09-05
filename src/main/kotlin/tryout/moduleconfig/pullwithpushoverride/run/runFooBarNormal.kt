@@ -6,7 +6,7 @@
 
 package tryout.moduleconfig.pullwithpushoverride.run
 
-import tryout.moduleconfig.pullwithpushoverride.foosfl.fooSfl
+import tryout.moduleconfig.pullwithpushoverride.fs.fooSfl
 
 fun main() {
 	fooSfl()

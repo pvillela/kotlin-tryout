@@ -4,9 +4,9 @@
  *  that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pullwithpushoverride.foosfl
+package tryout.moduleconfig.pushtofile.fs
 
-import tryout.moduleconfig.pullwithpushoverride.fwk.makeConfigSource
+import tryout.moduleconfig.pushtofile.fwk.makeConfigSource
 
 data class FooSflCfgInfo(
 	val x: String

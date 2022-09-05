@@ -6,7 +6,7 @@
 
 package tryout.moduleconfig.pullwithpushoverride.run
 
-import tryout.moduleconfig.pullwithpushoverride.baz.baz
+import tryout.moduleconfig.pullwithpushoverride.fs.baz
 
 fun main() {
 	baz()

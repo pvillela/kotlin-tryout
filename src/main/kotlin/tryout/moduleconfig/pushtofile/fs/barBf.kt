@@ -4,7 +4,7 @@
  *  that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pullwithpushoverride.foosfl
+package tryout.moduleconfig.pushtofile.fs
 
 import tryout.moduleconfig.pullwithpushoverride.fwk.CfgSrc
 import tryout.moduleconfig.pullwithpushoverride.fwk.makeConfigSource
@@ -13,7 +13,7 @@ data class BarBfCfgInfo(
 	val z: Int
 )
 
-val barBfCfgSrc: CfgSrc<BarBfCfgInfo> = makeConfigSource(::barBfCfgAdapter)
+val barBfCfgSrc: CfgSrc<BarBfCfgInfo> = makeConfigSource()
 
 fun barBf() {
 	println(barBfCfgSrc.get().z)

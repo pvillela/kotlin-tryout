@@ -4,7 +4,7 @@
  *  that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pushtofunction.foosfl
+package tryout.moduleconfig.pushtofunction.fs
 
 data class BarBfCfgInfo(
 	val z: Int

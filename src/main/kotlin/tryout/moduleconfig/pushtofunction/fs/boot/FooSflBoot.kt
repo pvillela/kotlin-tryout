@@ -4,12 +4,12 @@
  * that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pushtofunction.foosfl.boot
+package tryout.moduleconfig.pushtofunction.fs.boot
 
-import tryout.moduleconfig.pushtofunction.foosfl.FooSflCfgInfo
-import tryout.moduleconfig.pushtofunction.foosfl.FooSflCfgSrc
-import tryout.moduleconfig.pushtofunction.foosfl.FooSflT
-import tryout.moduleconfig.pushtofunction.foosfl.fooSflC
+import tryout.moduleconfig.pushtofunction.fs.FooSflCfgInfo
+import tryout.moduleconfig.pushtofunction.fs.FooSflCfgSrc
+import tryout.moduleconfig.pushtofunction.fs.FooSflT
+import tryout.moduleconfig.pushtofunction.fs.fooSflC
 import tryout.moduleconfig.pushtofunction.fwk.AppCfgInfo
 
 fun fooSflBoot(appCfg: () -> AppCfgInfo): FooSflT {

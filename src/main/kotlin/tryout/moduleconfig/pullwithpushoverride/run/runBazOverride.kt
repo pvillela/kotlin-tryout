@@ -6,9 +6,9 @@
 
 package tryout.moduleconfig.pullwithpushoverride.run
 
-import tryout.moduleconfig.pullwithpushoverride.baz.BazCfgInfo
-import tryout.moduleconfig.pullwithpushoverride.baz.baz
-import tryout.moduleconfig.pullwithpushoverride.baz.bazCfgSrc
+import tryout.moduleconfig.pullwithpushoverride.fs.BazCfgInfo
+import tryout.moduleconfig.pullwithpushoverride.fs.baz
+import tryout.moduleconfig.pullwithpushoverride.fs.bazCfgSrc
 
 fun main() {
     bazCfgSrc.set({

@@ -4,12 +4,12 @@
  * that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pushtofunction.foosfl.boot
+package tryout.moduleconfig.pushtofunction.fs.boot
 
-import tryout.moduleconfig.pushtofunction.foosfl.BarBfCfgInfo
-import tryout.moduleconfig.pushtofunction.foosfl.BarBfCfgSrc
-import tryout.moduleconfig.pushtofunction.foosfl.BarBfT
-import tryout.moduleconfig.pushtofunction.foosfl.barBfC
+import tryout.moduleconfig.pushtofunction.fs.BarBfCfgInfo
+import tryout.moduleconfig.pushtofunction.fs.BarBfCfgSrc
+import tryout.moduleconfig.pushtofunction.fs.BarBfT
+import tryout.moduleconfig.pushtofunction.fs.barBfC
 import tryout.moduleconfig.pushtofunction.fwk.AppCfgInfo
 
 fun barBfBoot(appCfg: () -> AppCfgInfo): BarBfT {
