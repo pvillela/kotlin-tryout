@@ -4,9 +4,9 @@
  *  that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pushtofile.fs
+package tryout.moduleconfig.pushtovar.fs
 
-import tryout.moduleconfig.pushtofile.fwk.makeConfigSource
+import tryout.moduleconfig.pushtovar.fwk.makeConfigSource
 
 data class FooSflCfgInfo(
 	val x: String

@@ -4,13 +4,10 @@
  *  that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pushtofile.run
+package tryout.moduleconfig.pushtovar.run
 
-import tryout.moduleconfig.pushtofile.fs.fooSfl
-import tryout.moduleconfig.pushtofile.startup.initialize
+import tryout.moduleconfig.pushtovar.fs.fooSfl
 
 fun main() {
-	initialize()
-
 	fooSfl()
 }

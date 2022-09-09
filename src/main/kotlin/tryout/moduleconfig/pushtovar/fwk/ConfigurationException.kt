@@ -1,4 +1,4 @@
-package tryout.moduleconfig.pushtofile.fwk
+package tryout.moduleconfig.pushtovar.fwk
 
 import java.lang.RuntimeException
 

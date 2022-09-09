@@ -4,10 +4,10 @@
  * that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pushtofile.fs
+package tryout.moduleconfig.pushtovar.fs
 
-import tryout.moduleconfig.pushtofile.startup.AppCfgInfo
-import tryout.moduleconfig.pushtofile.fwk.makeConfigSource
+import tryout.moduleconfig.pushtovar.startup.AppCfgInfo
+import tryout.moduleconfig.pushtovar.fwk.makeConfigSource
 
 fun fooSflCfgAdapter(appCfg: AppCfgInfo): FooSflCfgInfo {
 	return FooSflCfgInfo(

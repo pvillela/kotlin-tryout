@@ -4,7 +4,7 @@
  *  that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pushtofile.fs
+package tryout.moduleconfig.pushtovar.fs
 
 import tryout.moduleconfig.pullwithpushoverride.fwk.CfgSrc
 import tryout.moduleconfig.pullwithpushoverride.fwk.makeConfigSource

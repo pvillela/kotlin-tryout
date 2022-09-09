@@ -4,9 +4,9 @@
  *  that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pushtofile.fwk
+package tryout.moduleconfig.pushtovar.fwk
 
-import tryout.moduleconfig.pushtofile.startup.AppCfgInfo
+import tryout.moduleconfig.pushtovar.startup.AppCfgInfo
 
 interface CfgSrc<T> {
 	fun set(infoSrc: () -> T)

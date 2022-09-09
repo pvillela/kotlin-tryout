@@ -4,11 +4,10 @@
  *  that can be found in the LICENSE file.
  */
 
-package tryout.moduleconfig.pushtofile.startup
+package tryout.moduleconfig.pushtovar.startup
 
-import tryout.moduleconfig.pushtofile.startup.getAppConfiguration
-import tryout.moduleconfig.pushtofile.fs.barBfAdapterCfgSrc
-import tryout.moduleconfig.pushtofile.fs.fooSflAdapterCfgSrc
+import tryout.moduleconfig.pushtovar.fs.barBfAdapterCfgSrc
+import tryout.moduleconfig.pushtovar.fs.fooSflAdapterCfgSrc
 
 fun initialize()  {
 	val c = ::getAppConfiguration
