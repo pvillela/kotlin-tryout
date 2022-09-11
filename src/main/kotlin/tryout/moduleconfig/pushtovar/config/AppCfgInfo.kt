@@ -1,4 +1,4 @@
-package tryout.moduleconfig.pushtovar.startup
+package tryout.moduleconfig.pushtovar.config
 
 data class AppCfgInfo (
 	val x: String,

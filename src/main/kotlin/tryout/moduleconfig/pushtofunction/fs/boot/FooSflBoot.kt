@@ -10,18 +10,21 @@ import tryout.moduleconfig.pushtofunction.fs.FooSflCfgInfo
 import tryout.moduleconfig.pushtofunction.fs.FooSflCfgSrc
 import tryout.moduleconfig.pushtofunction.fs.FooSflT
 import tryout.moduleconfig.pushtofunction.fs.fooSflC
-import tryout.moduleconfig.pushtofunction.startup.AppCfgInfo
+import tryout.moduleconfig.pushtofunction.config.AppCfgInfo
+import tryout.moduleconfig.pushtovar.fwk.liftToNullary
 
-fun fooSflBoot(appCfg: () -> AppCfgInfo): FooSflT {
-	val fooSflCfgSrc = FooSflCfgSrc(
-		get = { fooSflCfgAdapter(appCfg()) },
-		bar = barBfBoot(appCfg)
-	)
-	return fooSflC(fooSflCfgSrc)
-}
-
-fun fooSflCfgAdapter(appCfg: AppCfgInfo): FooSflCfgInfo {
+private fun fooSflCfgAdapter0(appCfg: AppCfgInfo): FooSflCfgInfo {
 	return FooSflCfgInfo(
 		x = appCfg.x,
 	)
+}
+
+var fooSflCfgAdapter = liftToNullary(::fooSflCfgAdapter0)
+
+fun fooSflBoot(appCfg: (() -> AppCfgInfo)?): FooSflT {
+	val fooSflCfgSrc = FooSflCfgSrc(
+		get = fooSflCfgAdapter(appCfg),
+		bar = barBfBoot(appCfg)
+	)
+	return fooSflC(fooSflCfgSrc)
 }

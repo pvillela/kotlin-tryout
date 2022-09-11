@@ -1,4 +1,4 @@
-package tryout.moduleconfig.pullwithpushoverride.startup
+package tryout.moduleconfig.pullwithpushoverride.config
 
 data class AppCfgInfo (
 	val x: String,

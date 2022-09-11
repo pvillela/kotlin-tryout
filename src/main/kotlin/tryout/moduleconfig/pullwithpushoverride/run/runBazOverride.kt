@@ -11,9 +11,7 @@ import tryout.moduleconfig.pullwithpushoverride.fs.baz
 import tryout.moduleconfig.pullwithpushoverride.fs.bazCfgSrc
 
 fun main() {
-    bazCfgSrc.set({
-        BazCfgInfo("baz")
-    })
+    bazCfgSrc = { BazCfgInfo("baz") }
 
     baz()
 }

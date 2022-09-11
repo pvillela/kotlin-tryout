@@ -6,15 +6,15 @@
 
 package tryout.moduleconfig.pushtovar.fs
 
-import tryout.moduleconfig.pushtovar.fwk.makeConfigSource
+import tryout.moduleconfig.pushtovar.fwk.CfgSrc
 
 data class FooSflCfgInfo(
 	val x: String
 )
 
-val fooSflCfgSrc = makeConfigSource<FooSflCfgInfo>(::fooSflCfgAdapter)
+var fooSflCfgSrc = CfgSrc<FooSflCfgInfo>()
 
 fun fooSfl() {
-	println(fooSflCfgSrc.get().x)
+	println(fooSflCfgSrc().x)
 	barBf()
 }

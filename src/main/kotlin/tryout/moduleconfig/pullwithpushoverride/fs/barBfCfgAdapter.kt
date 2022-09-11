@@ -6,7 +6,7 @@
 
 package tryout.moduleconfig.pullwithpushoverride.fs
 
-import tryout.moduleconfig.pullwithpushoverride.startup.AppCfgInfo
+import tryout.moduleconfig.pullwithpushoverride.config.AppCfgInfo
 
 fun barBfCfgAdapter(appCfg: AppCfgInfo): BarBfCfgInfo {
 	return BarBfCfgInfo(

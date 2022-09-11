@@ -6,11 +6,12 @@
 
 package tryout.moduleconfig.pushtovar.startup
 
-import tryout.moduleconfig.pushtovar.fs.barBfAdapterCfgSrc
-import tryout.moduleconfig.pushtovar.fs.fooSflAdapterCfgSrc
+import tryout.moduleconfig.pushtovar.config.getAppConfiguration
+import tryout.moduleconfig.pushtovar.fs.cfgadapt.barBfCfgAdaptation
+import tryout.moduleconfig.pushtovar.fs.cfgadapt.fooSflCfgAdaptation
 
 fun initialize()  {
 	val c = ::getAppConfiguration
-	fooSflAdapterCfgSrc.set(c)
-	barBfAdapterCfgSrc.set(c)
+	fooSflCfgAdaptation.setOrigin(c)
+	barBfCfgAdaptation.setOrigin(c)
 }

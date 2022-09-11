@@ -6,15 +6,15 @@
 
 package tryout.moduleconfig.pullwithpushoverride.fs
 
-import tryout.moduleconfig.pullwithpushoverride.fwk.CfgSrc
-import tryout.moduleconfig.pullwithpushoverride.fwk.makeConfigSource
+import tryout.moduleconfig.pullwithpushoverride.config.CfgSrc
+import tryout.moduleconfig.pullwithpushoverride.config.makeCfgSrc
 
 data class BarBfCfgInfo(
 	val z: Int
 )
 
-val barBfCfgSrc: CfgSrc<BarBfCfgInfo> = makeConfigSource(::barBfCfgAdapter)
+var barBfCfgSrc: CfgSrc<BarBfCfgInfo> = makeCfgSrc(::barBfCfgAdapter)
 
 fun barBf() {
-	println(barBfCfgSrc.get().z)
+	println(barBfCfgSrc().z)
 }

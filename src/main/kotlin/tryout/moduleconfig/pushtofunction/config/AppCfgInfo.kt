@@ -1,4 +1,4 @@
-package tryout.moduleconfig.pushtofunction.startup
+package tryout.moduleconfig.pushtofunction.config
 
 import java.util.concurrent.atomic.AtomicReference
 

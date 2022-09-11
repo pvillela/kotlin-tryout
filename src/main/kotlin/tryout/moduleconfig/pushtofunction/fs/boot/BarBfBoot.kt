@@ -10,17 +10,20 @@ import tryout.moduleconfig.pushtofunction.fs.BarBfCfgInfo
 import tryout.moduleconfig.pushtofunction.fs.BarBfCfgSrc
 import tryout.moduleconfig.pushtofunction.fs.BarBfT
 import tryout.moduleconfig.pushtofunction.fs.barBfC
-import tryout.moduleconfig.pushtofunction.startup.AppCfgInfo
+import tryout.moduleconfig.pushtofunction.config.AppCfgInfo
+import tryout.moduleconfig.pushtovar.fwk.liftToNullary
 
-fun barBfBoot(appCfg: () -> AppCfgInfo): BarBfT {
-	val barBfCfgSrc = BarBfCfgSrc(
-		get = { barBfCfgAdapter(appCfg()) }
-	)
-	return barBfC(barBfCfgSrc)
-}
-
-fun barBfCfgAdapter(appCfg: AppCfgInfo): BarBfCfgInfo {
+private fun barBfCfgAdapter0(appCfg: AppCfgInfo): BarBfCfgInfo {
 	return BarBfCfgInfo(
 		z = appCfg.y,
 	)
+}
+
+var barBfCfgAdapter = liftToNullary(::barBfCfgAdapter0)
+
+fun barBfBoot(appCfg: (() -> AppCfgInfo)?): BarBfT {
+	val barBfCfgSrc = BarBfCfgSrc(
+		get = barBfCfgAdapter(appCfg)
+	)
+	return barBfC(barBfCfgSrc)
 }

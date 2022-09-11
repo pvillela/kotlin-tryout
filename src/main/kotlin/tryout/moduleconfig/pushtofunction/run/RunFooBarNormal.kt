@@ -6,21 +6,21 @@
 
 package tryout.moduleconfig.pushtofunction.run
 
-import tryout.moduleconfig.pushtofunction.startup.AppCfgInfo
-import tryout.moduleconfig.pushtofunction.startup.appCfgInfo
+import tryout.moduleconfig.pushtofunction.config.AppCfgInfo
+import tryout.moduleconfig.pushtofunction.config.appCfgInfo
 import tryout.moduleconfig.pushtofunction.startup.fooSfl
 import tryout.moduleconfig.pushtofunction.startup.fooSfl1
 
 fun main() {
-	fooSfl()
-	fooSfl1()
+    fooSfl()
+    fooSfl1()
 
-	// Change of app config properties at runtime
-	appCfgInfo.set(
+    // Change of app config properties at runtime
+    appCfgInfo.set(
         AppCfgInfo(
-		"XXX",
-		84
-	)
+            "YYY",
+            84
+        )
     )
-	fooSfl()
+    fooSfl()
 }

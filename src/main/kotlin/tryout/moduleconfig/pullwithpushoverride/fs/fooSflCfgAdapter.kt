@@ -6,7 +6,7 @@
 
 package tryout.moduleconfig.pullwithpushoverride.fs
 
-import tryout.moduleconfig.pullwithpushoverride.startup.AppCfgInfo
+import tryout.moduleconfig.pullwithpushoverride.config.AppCfgInfo
 
 fun fooSflCfgAdapter(appCfg: AppCfgInfo): FooSflCfgInfo {
 	return FooSflCfgInfo(

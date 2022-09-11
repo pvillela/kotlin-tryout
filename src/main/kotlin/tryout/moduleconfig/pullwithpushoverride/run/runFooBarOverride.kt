@@ -9,13 +9,9 @@ package tryout.moduleconfig.pullwithpushoverride.run
 import tryout.moduleconfig.pullwithpushoverride.fs.*
 
 fun main() {
-	fooSflCfgSrc.set({
-		FooSflCfgInfo("foo")
-	})
+	fooSflCfgSrc = { FooSflCfgInfo("foo") }
 
-	barBfCfgSrc.set({
-		BarBfCfgInfo(99)
-	})
+	barBfCfgSrc = { BarBfCfgInfo(99) }
 
 	fooSfl()
 }
