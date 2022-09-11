@@ -12,7 +12,7 @@ data class FooSflCfgInfo(
 	val x: String
 )
 
-var fooSflCfgSrc = CfgSrc<FooSflCfgInfo>()
+val fooSflCfgSrc = CfgSrc<FooSflCfgInfo>()
 
 fun fooSfl() {
 	println(fooSflCfgSrc().x)
