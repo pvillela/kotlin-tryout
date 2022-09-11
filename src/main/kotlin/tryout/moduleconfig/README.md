@@ -29,7 +29,7 @@ There are three main configuration approaches:
 - This involves constructing a file-level configuration object, used by functions defined in the file, that pulls in global application configuration but also allows configuration information to be injected for unit testing.
 - When unit testing with this approach, configuration information must be pushed to each dependency. 
 
-### *Push-to-var* approach
+### *Push-to-variable* approach
 
 - Each configurable module has a top-level variable that can be set with configuration information and which is accessed by functions in the file. For example a module can have an exported function `setConfig(configData)` that is called by application initialization logic to set the aforementioned top-level variable.
 - This approach inevitably causes dependencies to be hard-wired.
